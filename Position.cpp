@@ -1,38 +1,38 @@
 #include "Position.h"
 
-POSITION::POSITION(int x, int y) {
+Position::Position(int x, int y) {
 	this->x = x;
 	this->y = y;
 }
 
-int POSITION::getX() { return x; }
-int POSITION::getY() { return y; }
+int Position::getX() { return x; }
+int Position::getY() { return y; }
 
-POSITION POSITION::operator+(const POSITION& p) {
-	POSITION tmp(x, y);
+Position Position::operator+(const Position& p) {
+	Position tmp(x, y);
 	tmp.x += p.x;
 	tmp.y += p.y;
 	return tmp;
 }
 
-POSITION POSITION::operator-(const POSITION& p) {
+Position Position::operator-(const Position& p) {
 	Position tmp(x, y);
 	tmp.x -= p.x;
 	tmp.y -= p.y;
 	return tmp;
 }
 
-POSITION& POSITION::operator+=(const POSITION& a) {
+Position& Position::operator+=(const Position& a) {
 	*this = *this + a;
 	return *this;
 }
 
-POSITION& POSITION::operator-=(const POSITION& a) {
+Position& Position::operator-=(const Position& a) {
 	*this = *this + a;
 	return *this;
 }
 
 
-int POSITION::Distance(const POSITION& p) {
+int Position::Distance(const Position& p) {
 	return sqrt((p.x - x) * (p.x - x) / (3 * 3) + (p.y - y) * (p.y - y));
 }
