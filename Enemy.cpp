@@ -76,13 +76,14 @@ void Enemy::sound() {
 }
 
 bool Enemy::isOutOfMap() {
-    if (pos.getY() + width < SCREEN_LEFT || pos.getY() + width > SCREEN_RIGHT)
+    if (pos.getX() + width < SCREEN_LEFT || pos.getX() + width > SCREEN_RIGHT)
         return true;
     return false;
 }
 
 bool Enemy::move() {
-    this->pos += Position(3 * width, 0);
+    //this->pos += Position(2 * width, 0);
+    this->pos += 2;
     if (isOutOfMap())
         return false;
     return true; 
