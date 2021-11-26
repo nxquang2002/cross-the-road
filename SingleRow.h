@@ -15,5 +15,6 @@ public:
     void setRedLight();
     bool getDirection();
     void newState();
+    void draw();
     void deleteExpireEnemy();
 };

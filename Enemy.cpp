@@ -56,50 +56,28 @@ char** ENEMY::getShape() {
 }
 
 void ENEMY::drawShape() {
-    if (this->isOutOfMap())
-            return;
-    //int j = 0, tmp;
-    for (int i = -height; i < height + 1; i++) {
+    for (int i = -height; i < height + 1; i++)
+    {
         int startX, endX;
         if (pos.getX() + width > SCREEN_RIGHT)
         {
             startX = width;
             endX = SCREEN_RIGHT - pos.getX();
         }
-        else if (pos.getX() - width > SCREEN_LEFT) {
+        else if (pos.getX() - width < SCREEN_LEFT) {
             startX = pos.getX() - SCREEN_LEFT;
             endX = width;
         }
-        /*if (pos.getX() + width > SCREEN_RIGHT)
-        {
-            startX = width;
-            endX = width - (pos.getX() + width - SCREEN_RIGHT);
-        }
-        else if (pos.getX() - width > SCREEN_LEFT) {
-            startX = width - (SCREEN_LEFT - (pos.getX() - width));
-            endX = width;
-        }*/
         else
         {
             startX = width;
             endX = width;
         }
-        cout << "startX = " << startX << "\n" << "endX = " << endX << "\n";
-        
-        /*if (pos.getX() + width > SCREEN_RIGHT) {
-            tmp = width + 1;
+        gotoXY(pos.getX() - startX, pos.getY() + i);
+        for (int j = - startX; j < endX + 1; j++) 
+        {
+            cout << shape[i + height][j+width];
         }
-        else if (pos.getX() - width < SCREEN_LEFT) {
-            j = width;
-            tmp = 2 * width + 1; 
-        }
-        else {
-            tmp = 2 * width + 1;
-        }*/
-        /*gotoXY(pos.getX() - width, pos.getY() + i);
-        for (j; j < tmp; j++) {
-                cout << shape[i + height][j];
-            }*/
     }
 }
     
@@ -129,9 +107,26 @@ bool ENEMY::move() {
 
 void ENEMY::deleteOldEnemy() {
 
-    for (int i = -height; i < height + 1; i++) {
-        gotoXY(pos.getX() - width, pos.getY() + i);
-        for (int j = 0; j < 2 * width + 1; j++) {
+    for (int i = -height; i < height + 1; i++)
+    {
+        int startX, endX;
+        if (pos.getX() + width > SCREEN_RIGHT)
+        {
+            startX = width;
+            endX = SCREEN_RIGHT - pos.getX();
+        }
+        else if (pos.getX() - width < SCREEN_LEFT) {
+            startX = pos.getX() - SCREEN_LEFT;
+            endX = width;
+        }
+        else
+        {
+            startX = width;
+            endX = width;
+        }
+        gotoXY(pos.getX() - startX, pos.getY() + i);
+        for (int j = - startX; j < endX + 1; j++) 
+        {
             cout << ' ';
         }
     }
@@ -175,19 +170,19 @@ string Dinosaur::getShapeFile() {
     return "dino.txt";
 }
 
-int main()
-{
-    ENEMY* e = new Dinosaur(Position(25, 10));
-    e->getShape();
-    e->drawShape();
-    Sleep(500);
-    for (int i = 0; i < 10; i++) {
-        e->deleteOldEnemy();
-        Sleep(200);
-        e->move();
-        e->drawShape();
-        Sleep(200);
-    }
-    system("pause");
-    return 0;
-}
+// int main()
+// {
+//     ENEMY* e = new Dinosaur(Position(25, 10));
+//     e->getShape();
+//     e->drawShape();
+//     Sleep(500);
+//     for (int i = 0; i < 10; i++) {
+//         e->deleteOldEnemy();
+//         Sleep(200);
+//         e->move();
+//         e->drawShape();
+//         Sleep(200);
+//     }
+//     system("pause");
+//     return 0;
+// }
