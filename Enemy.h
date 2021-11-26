@@ -1,11 +1,12 @@
 #include "ConsoleManagement.h"
+//#include "SingleRow.h"
 #include "Position.h"
 #include <fstream>
 #include <string>
 #define SCREEN_LEFT 10
 #define SCREEN_RIGHT 110
 
-class Enemy {
+class ENEMY {
 protected:
     Position pos;
     int width;
@@ -13,8 +14,8 @@ protected:
     char** shape;
     bool isOutMap;
 public:
-    Enemy();
-    Enemy(Position pos);
+    ENEMY();
+    ENEMY(Position pos);
     int getWidth();
     int getHeight();
     virtual string getShapeFile() = 0;
@@ -25,32 +26,32 @@ public:
     bool isOutOfMap();
     bool move();
     void deleteOldEnemy();
-    ~Enemy();
+    ~ENEMY();
     
 };
 
-class Car: public Enemy {
+class Car: public ENEMY {
 public:
     Car();
     Car(Position pos);
     string getShapeFile();
 };
 
-class Truck: public Enemy {
+class Truck: public ENEMY {
 public:
     Truck();
     Truck(Position pos);
     string getShapeFile();
 };
 
-class Bird: public Enemy {
+class Bird: public ENEMY {
 public:
     Bird();
     Bird(Position pos);
     string getShapeFile();
 };
 
-class Dinosaur: public Enemy {
+class Dinosaur: public ENEMY {
 public:
     Dinosaur();
     Dinosaur(Position pos);
