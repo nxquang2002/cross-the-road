@@ -84,7 +84,7 @@ void MAP::drawRecDouble(int ox, int oy, short width, short height) {
 	}
 	cout << (char)188;
 }
-
+/*
 int main(){
 	resizeConsole(1300, 700);
 	MAP map;
@@ -92,4 +92,4 @@ int main(){
 
 	system("pause");
 	return 0;
-}
+}*/

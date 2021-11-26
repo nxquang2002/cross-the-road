@@ -58,9 +58,17 @@ char** Enemy::getShape() {
 void Enemy::drawShape() {
     for (int i = -height; i < height + 1; i++) {
         gotoXY(pos.getX() - width, pos.getY() + i);
-        for (int j = 0; j < 2 * width + 1; j++) {
-            cout << shape[i + height][j];
+        int j = 0, tmp;
+        if (pos.getX() + width > SCREEN_RIGHT)
+            tmp = width + 1;
+        else if (pos.getX() - width > SCREEN_LEFT) {
+
         }
+        else
+            tmp = 2 * width + 1;
+        for (int j = 0; j < tmp; j++) {
+                cout << shape[i + height][j];
+            }
     }
 }
     
@@ -76,16 +84,15 @@ void Enemy::sound() {
 }
 
 bool Enemy::isOutOfMap() {
-    if (pos.getX() + width < SCREEN_LEFT || pos.getX() + width > SCREEN_RIGHT)
+    if (pos.getX() - width < SCREEN_LEFT || pos.getX() + width > SCREEN_RIGHT)
         return true;
     return false;
 }
 
 bool Enemy::move() {
-    //this->pos += Position(2 * width, 0);
-    this->pos += 2;
     if (isOutOfMap())
         return false;
+    this->pos += Position(3 * width, 0);
     return true; 
 }
 
@@ -136,17 +143,20 @@ Dinosaur::Dinosaur(Position pos): Enemy(pos) {}
 string Dinosaur::getShapeFile() {
     return "dino.txt";
 }
-/*
+
 int main()
 {
     Enemy* e = new Dinosaur(Position(25, 10));
     e->getShape();
     e->drawShape();
     Sleep(500);
-    e->deleteOldEnemy();
-    Sleep(500);
-    e->move();
-    e->drawShape();
+    for (int i = 0; i < 10; i++) {
+        e->deleteOldEnemy();
+        Sleep(200);
+        e->move();
+        e->drawShape();
+        Sleep(200);
+    }
     system("pause");
     return 0;
-}*/
+}
