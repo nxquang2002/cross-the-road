@@ -56,18 +56,27 @@ char** Enemy::getShape() {
 }
 
 void Enemy::drawShape() {
+    int startX, endX;
     for (int i = -height; i < height + 1; i++) {
-        gotoXY(pos.getX() - width, pos.getY() + i);
-        int j = 0, tmp;
-        if (pos.getX() + width > SCREEN_RIGHT)
-            tmp = width + 1;
+        if (this->isOutMap())
+            return;
+        else if (pos.getX() + width > SCREEN_RIGHT)
+        {
+            startX = width;
+            endX= width - (pos.getX() +width - SCREEN_RIGHT)
+        }
         else if (pos.getX() - width > SCREEN_LEFT) {
-
+            startX = width - (SCREEN_LEFT - (pos.getX() - width));
+            endX = width;
         }
         else
-            tmp = 2 * width + 1;
-        for (int j = 0; j < tmp; j++) {
-                cout << shape[i + height][j];
+        {
+            startX = width;
+            endX = width;
+        }
+        gotoXY(pos.getX() - startX, pos.getY() + i);
+        for (int j =  -startX; j < endX + 1; j++) {
+                cout << shape[i + height][j+width];
             }
     }
 }
@@ -84,7 +93,7 @@ void Enemy::sound() {
 }
 
 bool Enemy::isOutOfMap() {
-    if (pos.getX() - width < SCREEN_LEFT || pos.getX() + width > SCREEN_RIGHT)
+    if (pos.getX() + width < SCREEN_LEFT || pos.getX() - width > SCREEN_RIGHT)
         return true;
     return false;
 }
