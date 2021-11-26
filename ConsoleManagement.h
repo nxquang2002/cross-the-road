@@ -67,4 +67,6 @@ void SetWindowSize(SHORT width, SHORT height);
 //Ẩn hiện thanh cuốn
 void ShowScrollbar(BOOL Show);
 
+void resizeConsole(int width, int height);
+
 #endif
