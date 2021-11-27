@@ -85,11 +85,40 @@ void MAP::drawRecDouble(int ox, int oy, short width, short height) {
 	cout << (char)188;
 }
 
-int main(){
-	resizeConsole(1300, 700);
-	MAP map;
-	map.drawMap();
-
-	system("pause");
-	return 0;
+//To draw any object from its pos, shape, width and height
+void MAP::drawObject(Position pos, char** shape, int width, int height) {
+	for (int i = -height; i < height + 1; i++) {
+		gotoXY(pos.getX() - width, pos.getY() + i);
+		for (int j = 0; j < 2 * width + 1; j++) {
+			cout << shape[i + height][j];
+		}
+	}
 }
+
+
+// int main(){
+
+// 	resizeConsole(1300, 700);
+// 	MAP map;
+// 	map.drawMap();
+
+// 	int count = 0;
+// 	while (count < 1) {
+// 		count++;
+// 		Enemy* e = new Dinosaur(Position(5, 8));
+// 		e->getShape();
+// 		e->drawShape();
+// 		while (!e->isOutOfMap()) {
+// 			Sleep(200);
+// 			e->deleteOldEnemy();
+// 			e->move();
+// 			e->drawShape();
+// 		}
+// 		e->deleteOldEnemy();
+// 		e->~Enemy();
+// 	}
+	
+
+// 	system("pause");
+// 	return 0;
+// }
