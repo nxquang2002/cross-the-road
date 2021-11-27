@@ -11,6 +11,9 @@ private:
 public:
     SINGLEROW();
     bool addEnemy(ENEMY* enemy);
+    int getSize(); //temp
+    int getY(); /////temp
+    void test(); ////temp
     bool getRedLight();
     void setRedLight();
     bool getDirection();

@@ -100,7 +100,7 @@ bool ENEMY::isOutOfMap() {
     return isOutMap;
 }
 
-bool ENEMY::move() {
+bool ENEMY::move() { //from right to left???
     if (isOutOfMap())
         return false;
     this->pos += POSITION(3 * width, 0);
@@ -171,7 +171,7 @@ Dinosaur::Dinosaur(POSITION pos): ENEMY(pos) {}
 string Dinosaur::getShapeFile() {
     return "dino.txt";
 }
-
+/*
 int main()
 {
     ENEMY* e = new Dinosaur(POSITION(25, 10));
@@ -187,4 +187,4 @@ int main()
     }
     system("pause");
     return 0;
-}
+}*/

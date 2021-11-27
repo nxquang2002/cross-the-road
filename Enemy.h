@@ -26,7 +26,6 @@ public:
     bool move();
     void deleteOldEnemy();
     ~ENEMY();
-    
 };
 
 class Car: public ENEMY {
