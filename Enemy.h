@@ -1,5 +1,4 @@
 #include "ConsoleManagement.h"
-//#include "SingleRow.h"
 #include "Position.h"
 #include <fstream>
 #include <string>
@@ -8,20 +7,20 @@
 
 class ENEMY {
 protected:
-    Position pos;
+    POSITION pos;
     int width;
     int height;
     char** shape;
     bool isOutMap;
 public:
     ENEMY();
-    ENEMY(Position pos);
+    ENEMY(POSITION pos);
     int getWidth();
     int getHeight();
     virtual string getShapeFile() = 0;
     char** getShape();
     void drawShape();
-    Position getPos();
+    POSITION getPos();
     void sound();
     bool isOutOfMap();
     bool move();
@@ -33,27 +32,27 @@ public:
 class Car: public ENEMY {
 public:
     Car();
-    Car(Position pos);
+    Car(POSITION pos);
     string getShapeFile();
 };
 
 class Truck: public ENEMY {
 public:
     Truck();
-    Truck(Position pos);
+    Truck(POSITION pos);
     string getShapeFile();
 };
 
 class Bird: public ENEMY {
 public:
     Bird();
-    Bird(Position pos);
+    Bird(POSITION pos);
     string getShapeFile();
 };
 
 class Dinosaur: public ENEMY {
 public:
     Dinosaur();
-    Dinosaur(Position pos);
+    Dinosaur(POSITION pos);
     string getShapeFile();
 };

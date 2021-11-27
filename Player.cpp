@@ -52,7 +52,7 @@ void PLAYER::deleteOldPlayer() {
 	}
 }
 
-bool PLAYER::isCollide(int posX, int posY, Enemy* currentEnemy) {
+bool PLAYER::isCollide(int posX, int posY, ENEMY* currentEnemy) {
 	if (posX >= currentEnemy->getPos().getX() - currentEnemy->getWidth() &&
 		posX <= currentEnemy->getPos().getX() + currentEnemy->getWidth() &&
 		posY >= currentEnemy->getPos().getY() - currentEnemy->getHeight() &&
@@ -62,7 +62,7 @@ bool PLAYER::isCollide(int posX, int posY, Enemy* currentEnemy) {
 	return false;
 }
 
-bool PLAYER::checkCrash(vector<Enemy*> enemy) {
+bool PLAYER::checkCrash(vector<ENEMY*> enemy) {
 	int posX = pos.getX(), posY = pos.getY();
 	for (int i = 0; i < enemy.size(); i++) {
 		for (int k = -width; k < width + 1; k++) {

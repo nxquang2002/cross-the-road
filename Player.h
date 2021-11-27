@@ -20,8 +20,8 @@ public:
 	void moveDown();
 	void drawPlayer();
 	void deleteOldPlayer();
-	bool isCollide(int posX, int posY, Enemy* currentEnemy);
-	bool checkCrash(vector<Enemy*> enemy);
+	bool isCollide(int posX, int posY, ENEMY* currentEnemy);
+	bool checkCrash(vector<ENEMY*> enemy);
 	void crashEffect();
 	void drawEffect(char** shape, int width, int height);
 };
