@@ -1,41 +1,43 @@
 #include "Enemy.h"
 
-Enemy::Enemy() {
+ENEMY::ENEMY() {
     this->width = 0;
     this->height = 0;
     this->shape = nullptr;
-    this->isOutMap = 1;
+    this->isOutMap = true;
 }
 
-Enemy::Enemy(Position pos) {
+ENEMY::ENEMY(POSITION pos) {
     this->pos = pos;
     this->width = 0;
     this->height = 0;
     this->shape = nullptr;
-    this->isOutMap = 1;
+    this->isOutMap = true;
 }
 
-int Enemy::getWidth() {
+int ENEMY::getWidth() {
     return width;
 }
 
-int Enemy::getHeight() {
+int ENEMY::getHeight() {
     return height;
 }
 
-char** Enemy::getShape() {
+char** ENEMY::getShape() {
     ifstream ifs;
     ifs.open(this->getShapeFile());
     
     if (!ifs.is_open()) {
-        cout << "Cannot open car.txt!\n";
+        cout << "Cannot open " << this->getShapeFile() << "!\n";
         return nullptr;
     }
 
     int x, y;
     ifs >> x >> y;
+    
     width = x / 2;
     height = y / 2;
+
     shape = new char*[y];
     for (int i = 0; i < y; i++)
         shape[i] = new char[x];
@@ -44,94 +46,127 @@ char** Enemy::getShape() {
     getline(ifs, s, '\n');
     for (int i = 0; i < y; i++) {
         getline(ifs, s, '\n');
-        for (int j = 0; j < x; j++) {
+        for (int j = 0; j < x; j++)
             shape[i][j] = s[j];
-            //cout << tmp[i][j];
-        }
-        //cout << "\n";
     }
+
     ifs.close();
 
     return shape;
 }
 
-void Enemy::drawShape() {
-    for (int i = -height; i < height + 1; i++) {
-        gotoXY(pos.getX() - width, pos.getY() + i);
-        for (int j = 0; j < 2 * width + 1; j++) {
-            cout << shape[i + height][j];
+void ENEMY::drawShape() {
+    for (int i = -height; i < height + 1; i++)
+    {
+        int startX, endX;
+        if (pos.getX() + width > SCREEN_RIGHT)
+        {
+            startX = width;
+            endX = SCREEN_RIGHT - pos.getX();
+        }
+        else if (pos.getX() - width < SCREEN_LEFT) {
+            startX = pos.getX() - SCREEN_LEFT;
+            endX = width;
+        }
+        else
+        {
+            startX = width;
+            endX = width;
+        }
+        gotoXY(pos.getX() - startX, pos.getY() + i);
+        for (int j = - startX; j < endX + 1; j++) 
+        {
+            cout << shape[i + height][j + width];
         }
     }
 }
     
-Position Enemy::getPos() {
+POSITION ENEMY::getPos() {
     return pos;
 }
 
-void Enemy::sound() {
+void ENEMY::sound() {
 
     //implement
 
     return;
 }
 
-bool Enemy::isOutOfMap() {
-    if (pos.getX() + width < SCREEN_LEFT || pos.getX() + width > SCREEN_RIGHT)
-        return true;
-    return false;
+bool ENEMY::isOutOfMap() {
+    if (pos.getX() + width < SCREEN_LEFT || pos.getX() - width > SCREEN_RIGHT) 
+        isOutMap = true; //what does this var do?
+    else
+        isOutMap = false;    
+    return isOutMap;
 }
 
-bool Enemy::move() {
-    //this->pos += Position(2 * width, 0);
-    this->pos += 2;
+bool ENEMY::move() { //from right to left???
     if (isOutOfMap())
         return false;
+    this->pos += POSITION(3 * width, 0);
     return true; 
 }
 
-void Enemy::deleteOldEnemy() {
+void ENEMY::deleteOldEnemy() {
 
-    for (int i = -height; i < height + 1; i++) {
-        gotoXY(pos.getX() - width, pos.getY() + i);
-        for (int j = 0; j < 2 * width + 1; j++) {
+    for (int i = -height; i < height + 1; i++)
+    {
+        int startX, endX;
+        if (pos.getX() + width > SCREEN_RIGHT)
+        {
+            startX = width;
+            endX = SCREEN_RIGHT - pos.getX();
+        }
+        else if (pos.getX() - width < SCREEN_LEFT) {
+            startX = pos.getX() - SCREEN_LEFT;
+            endX = width;
+        }
+        else
+        {
+            startX = width;
+            endX = width;
+        }
+        gotoXY(pos.getX() - startX, pos.getY() + i);
+        for (int j = - startX; j < endX + 1; j++) 
+        {
             cout << ' ';
         }
     }
 }
 
-Enemy::~Enemy() {
+ENEMY::~ENEMY() {
     for (int i = 0; i < height * 2 + 1; i++)
         delete[] shape[i];
     delete[] shape;
 }
 
-Car::Car(): Enemy() {}
+Car::Car(): ENEMY() {}
 
-Car::Car(Position pos): Enemy(pos) {}
+Car::Car(POSITION pos): ENEMY(pos) {}
 
 string Car::getShapeFile() {
     return "car.txt";
 }
 
-Truck::Truck(): Enemy() {}
+Truck::Truck(): ENEMY() {}
 
-Truck::Truck(Position pos): Enemy(pos) {}
+Truck::Truck(POSITION pos): ENEMY(pos) {}
 
 string Truck::getShapeFile() {
     return "truck.txt";
 }
 
-Bird::Bird(): Enemy() {}
+Bird::Bird(): ENEMY() {}
 
-Bird::Bird(Position pos): Enemy(pos) {}
+Bird::Bird(POSITION pos): ENEMY(pos) {}
 
 string Bird::getShapeFile() {
     return "bird.txt";
 }
 
-Dinosaur::Dinosaur(): Enemy() {}
+Dinosaur::Dinosaur(): ENEMY() {}
 
-Dinosaur::Dinosaur(Position pos): Enemy(pos) {}
+Dinosaur::Dinosaur(POSITION pos): ENEMY(pos) {}
 
 string Dinosaur::getShapeFile() {
     return "dino.txt";
@@ -139,14 +174,17 @@ string Dinosaur::getShapeFile() {
 /*
 int main()
 {
-    Enemy* e = new Dinosaur(Position(25, 10));
+    ENEMY* e = new Dinosaur(POSITION(25, 10));
     e->getShape();
     e->drawShape();
     Sleep(500);
-    e->deleteOldEnemy();
-    Sleep(500);
-    e->move();
-    e->drawShape();
+    for (int i = 0; i < 10; i++) {
+        e->deleteOldEnemy();
+        Sleep(200);
+        e->move();
+        e->drawShape();
+        Sleep(200);
+    }
     system("pause");
     return 0;
 }*/

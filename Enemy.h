@@ -5,54 +5,53 @@
 #define SCREEN_LEFT 10
 #define SCREEN_RIGHT 110
 
-class Enemy {
+class ENEMY {
 protected:
-    Position pos;
+    POSITION pos;
     int width;
     int height;
     char** shape;
     bool isOutMap;
 public:
-    Enemy();
-    Enemy(Position pos);
+    ENEMY();
+    ENEMY(POSITION pos);
     int getWidth();
     int getHeight();
     virtual string getShapeFile() = 0;
     char** getShape();
     void drawShape();
-    Position getPos();
+    POSITION getPos();
     void sound();
     bool isOutOfMap();
     bool move();
     void deleteOldEnemy();
-    ~Enemy();
-    
+    ~ENEMY();
 };
 
-class Car: public Enemy {
+class Car: public ENEMY {
 public:
     Car();
-    Car(Position pos);
+    Car(POSITION pos);
     string getShapeFile();
 };
 
-class Truck: public Enemy {
+class Truck: public ENEMY {
 public:
     Truck();
-    Truck(Position pos);
+    Truck(POSITION pos);
     string getShapeFile();
 };
 
-class Bird: public Enemy {
+class Bird: public ENEMY {
 public:
     Bird();
-    Bird(Position pos);
+    Bird(POSITION pos);
     string getShapeFile();
 };
 
-class Dinosaur: public Enemy {
+class Dinosaur: public ENEMY {
 public:
     Dinosaur();
-    Dinosaur(Position pos);
+    Dinosaur(POSITION pos);
     string getShapeFile();
 };

@@ -1,20 +1,21 @@
 #pragma once
 #include <iostream>
+#include <cmath>
 using namespace std;
 
-class Position {
+class POSITION {
 private:
 	int x, y;
 public:
-	Position(int x = 0, int y = 0);
+	POSITION(int x = 0, int y = 0);
 
 	int getX();
 	int getY();
 
-	Position operator+(const Position& p);
-	Position operator-(const Position& p);
-	Position& operator+=(const Position& a);
-	Position& operator-=(const Position& a);
+	POSITION operator+(const POSITION& p);
+	POSITION operator-(const POSITION& p);
+	POSITION& operator+=(const POSITION& a);
+	POSITION& operator-=(const POSITION& a);
 
-	int Distance(const Position& p);
+	int Distance(const POSITION& p);
 };

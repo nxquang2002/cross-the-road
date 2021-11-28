@@ -1,18 +1,18 @@
 #include "Map.h"
 
 MAP::MAP() : width(120), height(35), isPause(0), isEnd(0) {
-	for(int i = 0; i <= width; ++i){
+	for (int i = 0; i <= width; ++i) {
 		map[0][i] = map[height][i] = '-';
 	}
 	map[0][width + 1] = map[height][width + 1] = ' ';
-	for(int i = 1; i < height; ++i){
+	for (int i = 1; i < height; ++i) {
 		map[i][0] = map[i][width] = '|';
-		if(i % 5 == 0){
-			for(int j = 1; j < width; ++j)
+		if (i % 5 == 0) {
+			for (int j = 1; j < width; ++j)
 				map[i][j] = '-';
 		}
-		else{
-			for(int j = 1; j < width; ++j)
+		else {
+			for (int j = 1; j < width; ++j)
 				map[i][j] = ' ';
 		}
 		if (i % 5 == 2 || i % 5 == 3) {
@@ -22,14 +22,14 @@ MAP::MAP() : width(120), height(35), isPause(0), isEnd(0) {
 	}
 }
 
-MAP::~MAP(){
+MAP::~MAP() {
 }
 
-void MAP::drawMap(){
+void MAP::drawMap() {
 	gotoXY(0, 0);
-	for(int i = 0; i <= height; ++i){
+	for (int i = 0; i <= height; ++i) {
 		cout << "  ";
-		for(int j = 0; j <= width + 1; ++j)
+		for (int j = 0; j <= width + 1; ++j)
 			cout << map[i][j];
 		cout << endl;
 	}
@@ -41,7 +41,7 @@ void MAP::drawRecSingle(int ox, int oy, short width, short height) {
 	gotoXY(ox, oy);
 	cout << (char)218;				//Top-left corner
 	for (int i = 1; i <= width; ++i) {
-		cout << (char)196; 
+		cout << (char)196;
 	}
 	cout << (char)191 << endl;
 	gotoXY(ox, ++oy);
@@ -65,7 +65,7 @@ void MAP::drawRecDouble(int ox, int oy, short width, short height) {
 	gotoXY(ox, oy);
 	cout << (char)201;					//Top-left corner
 	for (int i = 1; i <= width; ++i) {
-		cout << (char)205; 
+		cout << (char)205;
 	}
 	cout << (char)187 << endl;
 	gotoXY(ox, ++oy);
@@ -86,7 +86,7 @@ void MAP::drawRecDouble(int ox, int oy, short width, short height) {
 }
 
 //To draw any object from its pos, shape, width and height
-void MAP::drawObject(Position pos, char** shape, int width, int height) {
+void MAP::drawObject(POSITION pos, char** shape, int width, int height) {
 	for (int i = -height; i < height + 1; i++) {
 		gotoXY(pos.getX() - width, pos.getY() + i);
 		for (int j = 0; j < 2 * width + 1; j++) {
@@ -95,6 +95,16 @@ void MAP::drawObject(Position pos, char** shape, int width, int height) {
 	}
 }
 
+
+void MAP::newState() {
+	int ranRow = rand() % 5;
+	int ranEnemy = rand() % 4;
+	for (int i = 0; i < 5; ++i) {
+		if (i == ranRow) {
+			 
+		}
+	}
+}
 
 // int main(){
 
@@ -105,7 +115,7 @@ void MAP::drawObject(Position pos, char** shape, int width, int height) {
 // 	int count = 0;
 // 	while (count < 1) {
 // 		count++;
-// 		Enemy* e = new Dinosaur(Position(5, 8));
+// 		Enemy* e = new Dinosaur(POSITION(5, 8));
 // 		e->getShape();
 // 		e->drawShape();
 // 		while (!e->isOutOfMap()) {
@@ -117,8 +127,9 @@ void MAP::drawObject(Position pos, char** shape, int width, int height) {
 // 		e->deleteOldEnemy();
 // 		e->~Enemy();
 // 	}
-	
+
 
 // 	system("pause");
 // 	return 0;
 // }
+
