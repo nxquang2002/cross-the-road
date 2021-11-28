@@ -7,6 +7,8 @@ POSITION::POSITION(int x, int y) {
 
 int POSITION::getX() { return x; }
 int POSITION::getY() { return y; }
+void POSITION::setX(int _x) { x = _x; }
+void POSITION::setY(int _y) { y = _y; }
 
 POSITION POSITION::operator+(const POSITION& p) {
 	POSITION tmp(x, y);
