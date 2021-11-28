@@ -11,6 +11,8 @@ public:
 
 	int getX();
 	int getY();
+	void setX(int _x);
+	void setY(int _y);
 
 	POSITION operator+(const POSITION& p);
 	POSITION operator-(const POSITION& p);
