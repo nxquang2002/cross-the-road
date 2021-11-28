@@ -28,28 +28,28 @@ public:
     ~ENEMY();
 };
 
-class Car: public ENEMY {
+class Car : public ENEMY {
 public:
     Car();
     Car(POSITION pos);
     string getShapeFile();
 };
 
-class Truck: public ENEMY {
+class Truck : public ENEMY {
 public:
     Truck();
     Truck(POSITION pos);
     string getShapeFile();
 };
 
-class Bird: public ENEMY {
+class Bird : public ENEMY {
 public:
     Bird();
     Bird(POSITION pos);
     string getShapeFile();
 };
 
-class Dinosaur: public ENEMY {
+class Dinosaur : public ENEMY {
 public:
     Dinosaur();
     Dinosaur(POSITION pos);

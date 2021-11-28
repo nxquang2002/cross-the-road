@@ -26,7 +26,7 @@ int ENEMY::getHeight() {
 char** ENEMY::getShape() {
     ifstream ifs;
     ifs.open(this->getShapeFile());
-    
+
     if (!ifs.is_open()) {
         cout << "Cannot open " << this->getShapeFile() << "!\n";
         return nullptr;
@@ -34,11 +34,11 @@ char** ENEMY::getShape() {
 
     int x, y;
     ifs >> x >> y;
-    
+
     width = x / 2;
     height = y / 2;
 
-    shape = new char*[y];
+    shape = new char* [y];
     for (int i = 0; i < y; i++)
         shape[i] = new char[x];
 
@@ -74,13 +74,13 @@ void ENEMY::drawShape() {
             endX = width;
         }
         gotoXY(pos.getX() - startX, pos.getY() + i);
-        for (int j = - startX; j < endX + 1; j++) 
+        for (int j = -startX; j < endX + 1; j++)
         {
             cout << shape[i + height][j + width];
         }
     }
 }
-    
+
 POSITION ENEMY::getPos() {
     return pos;
 }
@@ -93,18 +93,19 @@ void ENEMY::sound() {
 }
 
 bool ENEMY::isOutOfMap() {
-    if (pos.getX() + width < SCREEN_LEFT || pos.getX() - width > SCREEN_RIGHT) 
+    if (pos.getX() + width < SCREEN_LEFT || pos.getX() - width > SCREEN_RIGHT)
         isOutMap = true; //what does this var do?
     else
-        isOutMap = false;    
+        isOutMap = false;
     return isOutMap;
 }
 
 bool ENEMY::move() { //from right to left???
     if (isOutOfMap())
         return false;
-    this->pos += POSITION(3 * width, 0);
-    return true; 
+    //this->pos += POSITION(3 * width, 0);
+    this->pos += 3;
+    return true;
 }
 
 void ENEMY::deleteOldEnemy() {
@@ -127,7 +128,7 @@ void ENEMY::deleteOldEnemy() {
             endX = width;
         }
         gotoXY(pos.getX() - startX, pos.getY() + i);
-        for (int j = - startX; j < endX + 1; j++) 
+        for (int j = -startX; j < endX + 1; j++)
         {
             cout << ' ';
         }
@@ -140,33 +141,33 @@ ENEMY::~ENEMY() {
     delete[] shape;
 }
 
-Car::Car(): ENEMY() {}
+Car::Car() : ENEMY() {}
 
-Car::Car(POSITION pos): ENEMY(pos) {}
+Car::Car(POSITION pos) : ENEMY(pos) {}
 
 string Car::getShapeFile() {
     return "car.txt";
 }
 
-Truck::Truck(): ENEMY() {}
+Truck::Truck() : ENEMY() {}
 
-Truck::Truck(POSITION pos): ENEMY(pos) {}
+Truck::Truck(POSITION pos) : ENEMY(pos) {}
 
 string Truck::getShapeFile() {
     return "truck.txt";
 }
 
-Bird::Bird(): ENEMY() {}
+Bird::Bird() : ENEMY() {}
 
-Bird::Bird(POSITION pos): ENEMY(pos) {}
+Bird::Bird(POSITION pos) : ENEMY(pos) {}
 
 string Bird::getShapeFile() {
     return "bird.txt";
 }
 
-Dinosaur::Dinosaur(): ENEMY() {}
+Dinosaur::Dinosaur() : ENEMY() {}
 
-Dinosaur::Dinosaur(POSITION pos): ENEMY(pos) {}
+Dinosaur::Dinosaur(POSITION pos) : ENEMY(pos) {}
 
 string Dinosaur::getShapeFile() {
     return "dino.txt";
