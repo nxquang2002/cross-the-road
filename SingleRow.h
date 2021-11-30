@@ -10,14 +10,18 @@ private:
     bool dirRight;
     bool redLight;
     int rowY;
+    int distance;
+    int timeRedLight;
 public:
-    SINGLEROW();
+    SINGLEROW(int y = 0, int dist = 0, int t = 0);
     ~SINGLEROW();
     bool addEnemy(ENEMY* enemy);
     bool addEnemy(int type, POSITION pos);
     int getSize(); //temp
     int getY(); /////temp
     void test(); ////temp
+    int getTimeRedLight();
+    void setTimeRedLight(int t);
     bool getRedLight();
     void switchLight();  //Green -> red, red -> green;
     void setRedLight();

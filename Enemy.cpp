@@ -7,12 +7,13 @@ ENEMY::ENEMY() {
     this->isOutMap = true;
 }
 
-ENEMY::ENEMY(POSITION pos) {
+ENEMY::ENEMY(POSITION pos, bool dirRight) {
     this->pos = pos;
     this->width = 0;
     this->height = 0;
     this->shape = nullptr;
     this->isOutMap = true;
+    this->dirRight = dirRight;
 }
 
 int ENEMY::getWidth() {
@@ -100,11 +101,13 @@ bool ENEMY::isOutOfMap() {
     return isOutMap;
 }
 
-bool ENEMY::move() { //from right to left???
+bool ENEMY::move() {
     if (isOutOfMap())
         return false;
-    //this->pos += POSITION(3 * width, 0);
-    this->pos += 3;
+    if (dirRight)
+        this->pos += distance;
+    else
+        this->pos -= distance;
     return true;
 }
 
@@ -143,33 +146,41 @@ ENEMY::~ENEMY() {
 
 Car::Car() : ENEMY() {}
 
-Car::Car(POSITION pos) : ENEMY(pos) {}
+Car::Car(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
 
 string Car::getShapeFile() {
+    if (dirRight)
+        return "car1.txt";
     return "car.txt";
 }
 
 Truck::Truck() : ENEMY() {}
 
-Truck::Truck(POSITION pos) : ENEMY(pos) {}
+Truck::Truck(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
 
 string Truck::getShapeFile() {
+    if (dirRight)
+        return "truck1.txt";
     return "truck.txt";
 }
 
 Bird::Bird() : ENEMY() {}
 
-Bird::Bird(POSITION pos) : ENEMY(pos) {}
+Bird::Bird(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
 
 string Bird::getShapeFile() {
+    if (dirRight)
+        return "bird1.txt";
     return "bird.txt";
 }
 
 Dinosaur::Dinosaur() : ENEMY() {}
 
-Dinosaur::Dinosaur(POSITION pos) : ENEMY(pos) {}
+Dinosaur::Dinosaur(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
 
 string Dinosaur::getShapeFile() {
+    if (dirRight)
+        return "dino1.txt";
     return "dino.txt";
 }
 /*

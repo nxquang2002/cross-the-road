@@ -10,11 +10,13 @@ protected:
     POSITION pos;
     int width;
     int height;
+    int distance;
     char** shape;
     bool isOutMap;
+    bool dirRight;
 public:
     ENEMY();
-    ENEMY(POSITION pos);
+    ENEMY(POSITION pos, bool dirRight);
     int getWidth();
     int getHeight();
     virtual string getShapeFile() = 0;
@@ -31,27 +33,27 @@ public:
 class Car : public ENEMY {
 public:
     Car();
-    Car(POSITION pos);
+    Car(POSITION pos, bool dirRight);
     string getShapeFile();
 };
 
 class Truck : public ENEMY {
 public:
     Truck();
-    Truck(POSITION pos);
+    Truck(POSITION pos, bool dirRight);
     string getShapeFile();
 };
 
 class Bird : public ENEMY {
 public:
     Bird();
-    Bird(POSITION pos);
+    Bird(POSITION pos, bool dirRight);
     string getShapeFile();
 };
 
 class Dinosaur : public ENEMY {
 public:
     Dinosaur();
-    Dinosaur(POSITION pos);
+    Dinosaur(POSITION pos, bool dirRight);
     string getShapeFile();
 };

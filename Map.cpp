@@ -115,7 +115,7 @@ void MAP::newState() {
 // 	int count = 0;
 // 	while (count < 1) {
 // 		count++;
-// 		Enemy* e = new Dinosaur(POSITION(5, 8));
+// 		ENEMY* e = new Dinosaur(POSITION(5, 8));
 // 		e->getShape();
 // 		e->drawShape();
 // 		while (!e->isOutOfMap()) {
@@ -125,7 +125,7 @@ void MAP::newState() {
 // 			e->drawShape();
 // 		}
 // 		e->deleteOldEnemy();
-// 		e->~Enemy();
+// 		e->~ENEMY();
 // 	}
 
 

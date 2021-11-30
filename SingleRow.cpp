@@ -1,9 +1,12 @@
 #include "SingleRow.h"
 
-SINGLEROW::SINGLEROW() {
+SINGLEROW::SINGLEROW(int y, int dist, int t) {
     dirRight = true;
     redLight = false;
+    rowY = y;
+    distance = dist;
 }
+
 SINGLEROW::~SINGLEROW() {
     for (int i = 0; i < enemies.size(); ++i)
         delete enemies[i];
@@ -64,6 +67,13 @@ void SINGLEROW::test() {
     }
 }
 
+int SINGLEROW::getTimeRedLight() {
+    return timeRedLight;
+}
+void SINGLEROW::setTimeRedLight(int t) {
+    timeRedLight = t;
+}
+
 bool SINGLEROW::getRedLight() {
     return redLight;
 }
@@ -117,45 +127,10 @@ void SINGLEROW::deleteExpireEnemy() {
         delete temp;
     }    
 }
-
+/*
 
 int main()
 {
-    /*
-    ENEMY* e1 = new Dinosaur(POSITION(30, 10));
-    ENEMY* e2 = new Truck(POSITION(55, 10));
-    e1->getShape();
-    e2->getShape();
-    SINGLEROW r;
-    r.addEnemy(e1);
-    r.addEnemy(e2);
-    r.draw();
-    for (int i = 0; i < 100; i++) {
-        r.newState();
-        r.deleteExpireEnemy();
-        //
-        if (r.getSize() < 5) {
-            POSITION pos;
-            if (r.getDirection()) {
-                POSTION pos(SCREEN_LEFT, r.getY());
-            }
-            else {
-                pos.setX(SCREEN_RIGHT);
-                pos.setY(r.getY());
-            }
-            ENEMY* enemy = new Car(pos);
-            enemy->getShape();
-            r.addEnemy(enemy);
-        }
-        //
-        r.draw();
-        //r.test();
-
-        Sleep(200);
-    }
-    delete e1;
-    delete e2;*/
-
     SINGLEROW r;
     int ran;
     srand(time(NULL));
@@ -185,4 +160,4 @@ int main()
     r.~SINGLEROW();
     system("pause");
     return 0;
-}
+}*/
