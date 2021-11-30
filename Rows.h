@@ -1,3 +1,4 @@
+#pragma once
 #include "SingleRow.h"
 #include <time.h>
 #define ROW_NUM 5
