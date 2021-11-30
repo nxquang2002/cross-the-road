@@ -13,10 +13,10 @@ private:
     int distance;
     int timeRedLight;
 public:
-    SINGLEROW(int y = 0, int dist = 0, int t = 0);
+    SINGLEROW(bool right, int y = 0, int dist = 0, int t = 0); 
     ~SINGLEROW();
     bool addEnemy(ENEMY* enemy);
-    bool addEnemy(int type, POSITION pos);
+    bool addEnemy(int type, POSITION pos, int speed);
     int getSize(); //temp
     int getY(); /////temp
     void test(); ////temp

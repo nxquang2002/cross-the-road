@@ -1,7 +1,7 @@
 #include "SingleRow.h"
 
-SINGLEROW::SINGLEROW(int y, int dist, int t) {
-    dirRight = true;
+SINGLEROW::SINGLEROW(bool right, int y, int dist, int t) {
+    dirRight = right;
     redLight = false;
     rowY = y;
     distance = dist;
@@ -17,20 +17,20 @@ bool SINGLEROW::addEnemy(ENEMY* enemy) {
 }
 
 //them ham add voi parameter tuy loai.
-bool SINGLEROW::addEnemy(int type, POSITION pos) {
+bool SINGLEROW::addEnemy(int type, POSITION pos, int speed) {
     ENEMY* nEnemy = nullptr;
     switch (type) {
     case (0):
-        nEnemy = new Car(pos);
+        nEnemy = new Car(pos, dirRight, speed);
         break;
     case(1):
-        nEnemy = new Truck(pos);
+        nEnemy = new Truck(pos, dirRight, speed);
         break;
     case 2:
-        nEnemy = new Bird(pos);
+        nEnemy = new Bird(pos, dirRight, speed);
         break;
     case 3:
-        nEnemy = new Dinosaur(pos);
+        nEnemy = new Dinosaur(pos, dirRight, speed);
         break;
     }
     nEnemy->getShape();
@@ -38,7 +38,11 @@ bool SINGLEROW::addEnemy(int type, POSITION pos) {
         delete nEnemy;
         return false;
     }
-    else if (!enemies.empty() && pos.getX() + nEnemy->getWidth() + 5 >= enemies.back()->getPos().getX() - enemies.back()->getWidth()) {
+    else if (!enemies.empty() && dirRight && pos.getX() + nEnemy->getWidth() + distance >= enemies.back()->getPos().getX() - enemies.back()->getWidth()) {
+        delete nEnemy;
+        return false;
+    }
+    else if(!enemies.empty() && !dirRight && pos.getX() - nEnemy->getWidth() - distance <= enemies.back()->getPos().getX() + enemies.back()->getWidth()){
         delete nEnemy;
         return false;
     }
@@ -55,7 +59,6 @@ int SINGLEROW::getSize() {
 
 int SINGLEROW::getY() {
     gotoXY(0, 5);
-    cout << "HAHA: " << enemies[0]->getPos().getY() << "\n";
     return enemies[0]->getPos().getY();
 }
 
@@ -105,13 +108,10 @@ void SINGLEROW::newState() {
 //Nếu redlight thì vẽ đèn đỏ ra, xóa đèn xanh và ngược lại
 //Về direction thì xử lí như thế nào?
 
-//void newState(bool red);
-
-
 void SINGLEROW::draw()
 {
     for (int i = 0; i < enemies.size(); i++) {
-        if(!enemies[i]->isOutOfMap())
+        if (!enemies[i]->isOutOfMap())
             enemies[i]->drawShape();
     }
 }
@@ -121,43 +121,9 @@ void SINGLEROW::deleteExpireEnemy() {
         enemies.pop_back();
         delete temp;
     }
-    if (enemies[0]->isOutOfMap()) { 
+    if (enemies[0]->isOutOfMap()) {
         ENEMY* temp = enemies[0];
         enemies.erase(enemies.begin());
         delete temp;
-    }    
-}
-/*
-
-int main()
-{
-    SINGLEROW r;
-    int ran;
-    srand(time(NULL));
-    ran = rand() % 4;
-    r.addEnemy(ran, POSITION(30, 10));
-    ran = rand() % 4;
-    r.addEnemy(ran, POSITION(55, 10));
-    for (int i = 0; i < 150; ++i) {
-        r.newState();
-        r.deleteExpireEnemy();
-        if (r.getSize() < 5) {
-            POSITION pos;
-            if (r.getDirection()) {
-                pos.setX(SCREEN_LEFT);
-                pos.setY(r.getY());
-            }
-            else {
-                pos.setX(SCREEN_RIGHT);
-                pos.setY(r.getY());
-            }
-            ran = rand() % 4;
-            r.addEnemy(ran, pos);
-        }
-        r.draw();
-        Sleep(150);
     }
-    r.~SINGLEROW();
-    system("pause");
-    return 0;
-}*/
+}
