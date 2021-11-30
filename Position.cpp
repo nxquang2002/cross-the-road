@@ -30,7 +30,7 @@ POSITION& POSITION::operator+=(const POSITION& a) {
 }
 
 POSITION& POSITION::operator-=(const POSITION& a) {
-	*this = *this + a;
+	*this = *this - a;
 	return *this;
 }
 
