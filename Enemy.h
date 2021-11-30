@@ -16,11 +16,12 @@ protected:
     bool dirRight;
 public:
     ENEMY();
-    ENEMY(POSITION pos, bool dirRight);
+    ENEMY(POSITION pos, bool dirRight, int spd);
     int getWidth();
     int getHeight();
     virtual string getShapeFile() = 0;
     char** getShape();
+    void setSpeed(int spd);
     void drawShape();
     POSITION getPos();
     void sound();
@@ -33,27 +34,27 @@ public:
 class Car : public ENEMY {
 public:
     Car();
-    Car(POSITION pos, bool dirRight);
+    Car(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
 };
 
 class Truck : public ENEMY {
 public:
     Truck();
-    Truck(POSITION pos, bool dirRight);
+    Truck(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
 };
 
 class Bird : public ENEMY {
 public:
     Bird();
-    Bird(POSITION pos, bool dirRight);
+    Bird(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
 };
 
 class Dinosaur : public ENEMY {
 public:
     Dinosaur();
-    Dinosaur(POSITION pos, bool dirRight);
+    Dinosaur(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
 };

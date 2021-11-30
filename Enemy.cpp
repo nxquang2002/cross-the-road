@@ -5,15 +5,17 @@ ENEMY::ENEMY() {
     this->height = 0;
     this->shape = nullptr;
     this->isOutMap = true;
+    this->speed = 0;
 }
 
-ENEMY::ENEMY(POSITION pos, bool dirRight) {
+ENEMY::ENEMY(POSITION pos, bool right, int spd) {
     this->pos = pos;
     this->width = 0;
     this->height = 0;
     this->shape = nullptr;
     this->isOutMap = true;
-    this->dirRight = dirRight;
+    this->dirRight = right;
+    this->speed = spd;
 }
 
 int ENEMY::getWidth() {
@@ -52,8 +54,11 @@ char** ENEMY::getShape() {
     }
 
     ifs.close();
-
     return shape;
+}
+
+void ENEMY::setSpeed(int spd) {
+    speed = spd;
 }
 
 void ENEMY::drawShape() {
@@ -146,7 +151,7 @@ ENEMY::~ENEMY() {
 
 Car::Car() : ENEMY() {}
 
-Car::Car(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
+Car::Car(POSITION pos, bool dirRight, int spd) : ENEMY(pos, dirRight, spd) {}
 
 string Car::getShapeFile() {
     if (dirRight)
@@ -156,7 +161,7 @@ string Car::getShapeFile() {
 
 Truck::Truck() : ENEMY() {}
 
-Truck::Truck(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
+Truck::Truck(POSITION pos, bool dirRight, int spd) : ENEMY(pos, dirRight, spd) {}
 
 string Truck::getShapeFile() {
     if (dirRight)
@@ -166,7 +171,7 @@ string Truck::getShapeFile() {
 
 Bird::Bird() : ENEMY() {}
 
-Bird::Bird(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
+Bird::Bird(POSITION pos, bool dirRight, int spd) : ENEMY(pos, dirRight, spd) {}
 
 string Bird::getShapeFile() {
     if (dirRight)
@@ -176,7 +181,7 @@ string Bird::getShapeFile() {
 
 Dinosaur::Dinosaur() : ENEMY() {}
 
-Dinosaur::Dinosaur(POSITION pos, bool dirRight) : ENEMY(pos, dirRight) {}
+Dinosaur::Dinosaur(POSITION pos, bool dirRight, int spd) : ENEMY(pos, dirRight, spd) {}
 
 string Dinosaur::getShapeFile() {
     if (dirRight)
