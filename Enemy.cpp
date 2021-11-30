@@ -105,9 +105,9 @@ bool ENEMY::move() {
     if (isOutOfMap())
         return false;
     if (dirRight)
-        this->pos += distance;
+        this->pos += speed;
     else
-        this->pos -= distance;
+        this->pos -= speed;
     return true;
 }
 

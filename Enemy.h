@@ -10,7 +10,7 @@ protected:
     POSITION pos;
     int width;
     int height;
-    int distance;
+    int speed;
     char** shape;
     bool isOutMap;
     bool dirRight;
