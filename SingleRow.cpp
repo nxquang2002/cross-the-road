@@ -8,8 +8,10 @@ SINGLEROW::SINGLEROW(bool right, int y, int dist, int t) {
 }
 
 SINGLEROW::~SINGLEROW() {
-    for (int i = 0; i < enemies.size(); ++i)
+    for (int i = 0; i < enemies.size(); ++i) {
+        //enemies[i]->~ENEMY();
         delete enemies[i];
+    }
 }
 bool SINGLEROW::addEnemy(ENEMY* enemy) {
     enemies.push_back(enemy);
@@ -57,9 +59,9 @@ int SINGLEROW::getSize() {
     return enemies.size();
 }
 
-int SINGLEROW::getY() {
-    gotoXY(0, 5);
-    return enemies[0]->getPos().getY();
+int SINGLEROW::getY() { 
+    //gotoXY(0, 5);
+    return rowY;
 }
 
 void SINGLEROW::test() {
@@ -116,11 +118,14 @@ void SINGLEROW::draw()
     }
 }
 void SINGLEROW::deleteExpireEnemy() {
+    if (enemies.size() == 0)
+        return;
+    /*
     if (enemies[enemies.size() - 1]->isOutOfMap()) {
         ENEMY* temp = enemies.back();
         enemies.pop_back();
         delete temp;
-    }
+    }*/
     if (enemies[0]->isOutOfMap()) {
         ENEMY* temp = enemies[0];
         enemies.erase(enemies.begin());
