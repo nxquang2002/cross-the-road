@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿#ifndef _LEVEL_H_
+#define _LEVEL_H_
 #include <iostream>
 #include "Enemy.h"
 #include "Player.h"
@@ -19,3 +20,5 @@ public:
 	void NewLevel();
 
 };
+
+#endif

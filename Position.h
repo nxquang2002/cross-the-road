@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _POSITION_H_
+#define _POSITION_H_
+
 #include <iostream>
 #include <cmath>
 using namespace std;
@@ -21,3 +23,5 @@ public:
 
 	int Distance(const POSITION& p);
 };
+
+#endif

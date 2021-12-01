@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _ROWS_H_
+#define _ROWS_H_
+
 #include "SingleRow.h"
 #include <time.h>
 #define ROW_NUM 5
@@ -11,3 +13,5 @@ public:
     ~ROWS();
     void newState(int t, int v);
 };
+
+#endif // !_ROWS_H_

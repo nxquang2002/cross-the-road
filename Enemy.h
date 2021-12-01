@@ -1,3 +1,6 @@
+#ifndef _ENEMY_H_
+#define _ENEMY_H_
+
 #include "ConsoleManagement.h"
 #include "Position.h"
 #include <fstream>
@@ -58,3 +61,5 @@ public:
     Dinosaur(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
 };
+
+#endif // !_ENEMY_H_

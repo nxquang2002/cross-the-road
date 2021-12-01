@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _PLAYER_H_
+#define _PLAYER_H_
+
 #include "Position.h"
 #include "Enemy.h"
 #include <string>
@@ -25,3 +27,5 @@ public:
 	void crashEffect();
 	void drawEffect(char** shape, int width, int height);
 };
+
+#endif // !_PLAYER_H_

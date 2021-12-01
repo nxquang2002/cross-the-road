@@ -1,8 +1,12 @@
+#ifndef _SINGLEROW_H_
+#define _SINGLEROW_H_
+
 #include "ConsoleManagement.h"
 #include "Enemy.h"
 #include "Position.h"
 #include <time.h>
 #include <vector>
+#include <assert.h>
 
 class SINGLEROW {
 private:
@@ -13,7 +17,7 @@ private:
     int distance;
     int timeRedLight;
 public:
-    SINGLEROW(bool right, int y = 0, int dist = 0, int t = 0); 
+    SINGLEROW(bool right, int y = 0, int dist = 0, int t = 0);
     ~SINGLEROW();
     bool addEnemy(ENEMY* enemy);
     bool addEnemy(int type, POSITION pos, int speed);
@@ -30,3 +34,5 @@ public:
     void draw();
     void deleteExpireEnemy();
 };
+
+#endif // !_SINGLEROW_H_
