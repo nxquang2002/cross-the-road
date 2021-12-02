@@ -1,4 +1,4 @@
-﻿#include "Player.h"
+#include "Player.h"
 
 PLAYER::PLAYER(POSITION position, bool dead, bool win) {
 	pos = position;
@@ -50,6 +50,15 @@ void PLAYER::deleteOldPlayer() {
 			cout << ' ';
 		}
 	}
+
+	for (int i = -height; i < height + 1; i++) {
+		if ((pos.getY() + i) % 5 == 0 && (pos.getY() + i) <= 35) {
+			for (int j = -width; j < width + 1; j++) {
+				gotoXY(pos.getX() - j, pos.getY() + i);
+				cout << '-';
+			}
+		}
+	}
 }
 
 bool PLAYER::isCollide(int posX, int posY, ENEMY* currentEnemy) {
@@ -89,7 +98,7 @@ void PLAYER::drawEffect(char** shape, int width, int height) {
 			}
 		}
 		Sleep(100);
-		
+
 	}
 }
 
