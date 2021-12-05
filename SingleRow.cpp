@@ -5,6 +5,11 @@ SINGLEROW::SINGLEROW(bool right, int y, int dist, int t) {
     redLight = false;
     rowY = y;
     distance = dist;
+    timeRedLight = t;
+    gotoXY(123, rowY);
+    TextColor(10);          //Draw the light
+    cout << (char)254;
+    TextColor(15);
 }
 
 SINGLEROW::~SINGLEROW() {
@@ -13,12 +18,7 @@ SINGLEROW::~SINGLEROW() {
         delete enemies[i];
     }
 }
-bool SINGLEROW::addEnemy(ENEMY* enemy) {
-    enemies.push_back(enemy);
-    return true;
-}
 
-//them ham add voi parameter tuy loai.
 bool SINGLEROW::addEnemy(int type, POSITION pos, int speed) {
     ENEMY* nEnemy = nullptr;
     switch (type) {
@@ -40,11 +40,13 @@ bool SINGLEROW::addEnemy(int type, POSITION pos, int speed) {
         delete nEnemy;
         return false;
     }
-    else if (!enemies.empty() && dirRight && pos.getX() + nEnemy->getWidth() + distance >= enemies.back()->getPos().getX() - enemies.back()->getWidth()) {
+    else if (!enemies.empty() && dirRight && pos.getX() + nEnemy->getWidth() + distance 
+        >= enemies.back()->getPos().getX() - enemies.back()->getWidth()) {
         delete nEnemy;
         return false;
     }
-    else if(!enemies.empty() && !dirRight && pos.getX() - nEnemy->getWidth() - distance <= enemies.back()->getPos().getX() + enemies.back()->getWidth()){
+    else if(!enemies.empty() && !dirRight && pos.getX() - nEnemy->getWidth() - distance 
+        <= enemies.back()->getPos().getX() + enemies.back()->getWidth()){
         delete nEnemy;
         return false;
     }
@@ -84,9 +86,24 @@ bool SINGLEROW::getRedLight() {
 }
 
 void SINGLEROW::switchLight() {
-    if (redLight)
+    if (redLight) {
         redLight = false;
-    else redLight = true;
+        gotoXY(123, rowY);
+        TextColor(10);
+        cout << (char)254;
+        gotoXY(123, rowY - 1);
+        cout << ' ';
+        TextColor(15);
+    }
+    else {
+        gotoXY(123, rowY - 1);
+        TextColor(12);
+        cout << (char)254;
+        gotoXY(123, rowY);
+        cout << ' ';
+        TextColor(15);
+        redLight = true;
+    }
 }
 
 void SINGLEROW::setRedLight() {
@@ -97,6 +114,13 @@ bool SINGLEROW::getDirection() {
     return dirRight;
 }
 
+void SINGLEROW::setDistance(int dist) {
+    distance = dist;
+}
+
+vector<ENEMY*> SINGLEROW::getListEnemies() const{
+    return enemies;
+}
 
 void SINGLEROW::newState() {
     if (redLight)
@@ -106,9 +130,6 @@ void SINGLEROW::newState() {
         enemies[i]->move();
     }
 }
-//Không để light cứng như vậy
-//Nếu redlight thì vẽ đèn đỏ ra, xóa đèn xanh và ngược lại
-//Về direction thì xử lí như thế nào?
 
 void SINGLEROW::draw()
 {
@@ -120,12 +141,6 @@ void SINGLEROW::draw()
 void SINGLEROW::deleteExpireEnemy() {
     if (enemies.size() == 0)
         return;
-    /*
-    if (enemies[enemies.size() - 1]->isOutOfMap()) {
-        ENEMY* temp = enemies.back();
-        enemies.pop_back();
-        delete temp;
-    }*/
     if (enemies[0]->isOutOfMap()) {
         ENEMY* temp = enemies[0];
         enemies.erase(enemies.begin());
