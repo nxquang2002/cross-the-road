@@ -11,7 +11,9 @@ private:
 public:
     ROWS();
     ~ROWS();
-    void newState(int t, int v);
+    void initializeState(int speed);
+    void newState(int t, int v, int lightPhase);
+    vector<ENEMY*> listEnemies(int rowIndex) const;    //get the list of enemies in row i
 };
 
 #endif // !_ROWS_H_
