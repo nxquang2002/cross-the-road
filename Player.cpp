@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 
 PLAYER::PLAYER(POSITION position, bool dead, bool win) {
 	pos = position;
@@ -7,24 +7,32 @@ PLAYER::PLAYER(POSITION position, bool dead, bool win) {
 }
 
 void PLAYER::moveLeft() {
+	if (pos.getX() - 1 < SCREEN_LEFT)
+		return;
 	deleteOldPlayer();
 	pos += POSITION(-1, 0);
 	drawPlayer();
 }
 
 void PLAYER::moveUp() {
+	if (pos.getY() - 1 < SCREEN_TOP)
+		return;
 	deleteOldPlayer();
 	pos += POSITION(0, -1);
 	drawPlayer();
 }
 
 void PLAYER::moveDown() {
+	if (pos.getY() + 1 > SCREEN_BOTTOM)
+		return;
 	deleteOldPlayer();
 	pos += POSITION(0, 1);
 	drawPlayer();
 }
 
 void PLAYER::moveRight() {
+	if (pos.getX() + 1 > SCREEN_RIGHT)
+		return;
 	deleteOldPlayer();
 	pos += POSITION(1, 0);
 	drawPlayer();
@@ -41,6 +49,8 @@ void PLAYER::drawPlayer() {
 			cout << shape[i + height][j];
 		}
 	}
+	//gotoXY(pos.getX() + width + 1, pos.getY());
+	//cout << '(' << pos.getX() << ',' << pos.getY() << ")";
 }
 
 void PLAYER::deleteOldPlayer() {
@@ -71,12 +81,26 @@ bool PLAYER::isCollide(int posX, int posY, ENEMY* currentEnemy) {
 	return false;
 }
 
+bool PLAYER::isCollide(ENEMY* currentEnemy) {
+	if (pos.getX() + width < currentEnemy->getPos().getX() - currentEnemy->getWidth())
+		return false;
+	if (pos.getX() - width > currentEnemy->getPos().getX() + currentEnemy->getWidth())
+		return false;
+	if (pos.getY() + height < currentEnemy->getPos().getY() - currentEnemy->getHeight())
+		return false;
+	if (pos.getY() - height > currentEnemy->getPos().getY() + currentEnemy->getHeight())
+		return false;
+	return true;
+}
+
+
 bool PLAYER::checkCrash(vector<ENEMY*> enemy) {
 	int posX = pos.getX(), posY = pos.getY();
 	for (int i = 0; i < enemy.size(); i++) {
-		for (int k = -width; k < width + 1; k++) {
-			if (isCollide(posX + k, posY + 1, enemy[i])) return true;
-		}
+		//for (int k = -width; k < width + 1; k++) {
+		//	if (isCollide(posX + k, posY + 1, enemy[i])) return true;
+		//}
+		if (isCollide(enemy[i])) return true;
 	}
 	return false;
 }
@@ -91,14 +115,30 @@ void PLAYER::drawEffect(char** shape, int width, int height) {
 			}
 		}
 		Sleep(100);
-		for (int i = -height; i < height + 1; i++) {
-			gotoXY(pos.getX() - width, pos.getY() + i);
-			for (int j = 0; j < 2 * width + 1; j++) {
-				cout << ' ';
+		if (k < 4) {
+			for (int i = -height; i < height + 1; i++) {
+				gotoXY(pos.getX() - width, pos.getY() + i);
+				for (int j = 0; j < 2 * width + 1; j++) {
+					cout << ' ';
+				}
 			}
+			Sleep(100);
 		}
-		Sleep(100);
+	}
+}
 
+void PLAYER::getCurrentRows(vector<int>& rows) {
+	int top = pos.getY() - height;
+	int bot = pos.getY() + height;
+	int r1 = top / 5 - 1;
+	int r2 = bot / 5 - 1;
+	if ((r1 >= 5 && r2 >= 5) || (r1 < 0 && r2 <  0))
+		return;
+	if (r1 == r2)
+		rows.push_back(r1);
+	else {
+		if(r1 >= 0 && r1 < 5) rows.push_back(r1);
+		if(r2 >= 0 && r2 < 5) rows.push_back(r2);
 	}
 }
 
@@ -107,7 +147,7 @@ void PLAYER::crashEffect() {
 	ifs.open("explosion.txt");
 
 	if (!ifs.is_open()) {
-		cout << "Cannot open car.txt!\n";
+		cout << "Cannot open explosion.txt!\n";
 		return;
 	}
 
@@ -131,4 +171,7 @@ void PLAYER::crashEffect() {
 	ifs.close();
 	drawEffect(shape, width, height);
 
+	for (int i = 0; i < y; i++)
+		delete[] shape[i];
+	delete[] shape;
 }

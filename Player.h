@@ -6,6 +6,10 @@
 #include <string>
 #include <vector>
 #include <conio.h>
+#define SCREEN_LEFT 5
+#define SCREEN_RIGHT 120
+#define SCREEN_TOP 2
+#define SCREEN_BOTTOM 33
 
 class PLAYER {
 private:
@@ -26,6 +30,9 @@ public:
 	bool checkCrash(vector<ENEMY*> enemy);
 	void crashEffect();
 	void drawEffect(char** shape, int width, int height);
+	void getCurrentRows(vector<int> &rows); //Get rows index, where player are standing
+
+	bool isCollide(ENEMY* currentEnemy);
 };
 
 #endif // !_PLAYER_H_
