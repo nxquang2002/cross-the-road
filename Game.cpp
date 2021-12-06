@@ -70,7 +70,7 @@ void GAME::newGame() {
 }
 
 void GAME::menu() {
-	const char Title[][82] = { { 32,95,95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
+	const unsigned char Title[][82] = { { 32,95,95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								 { 32,'_',95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								{ '|',32,32,'_','_',32,92,32,	 32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,'|',32,178,	   32,32,32,32,32,  32,32,'/',32,'_','_','_',178,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								{ '|',32,178,'_','_',')',32,')', 32,32,'_','_','_',32,32,	 32,32,'_','_',32,'_',32,	  32,32,'_','_','|',32,178,	   32,32,32,32,32,  32,'/',32,32,178,32,32,32,		32,'_',32,'_','_',32,	 32,32,'_','_','_',32,32,	 32,'_','_','_',32,    32,'_','_','_',32,	 '(','_',')', 32,'_',32,'_','_',32,32,	  32,32,'_','_',32,'_',32},
@@ -232,6 +232,71 @@ void subNewGame() {
     gotoXY(startX + 13, startY + 2);
 	cout << "Press any key to continue...";
 	_getch();
+}
+
+void drawInputNameBar() {
+    int startX = 82;
+    int startY = 17;
+
+    // new game board
+    TextColor(ColorCode_DarkCyan);
+	gotoXY(startX + 2, startY + 1);
+	cout << "NEW GAME";
+
+	gotoXY(startX + 1, startY);
+	for (int i = 0; i < 10; ++i) //10 is the size of " NEW GAME "
+		cout << char(205);
+
+	gotoXY(startX + 1, startY + 2); 
+	for (int i = 0; i < 10; ++i) //10 is the size of " NEW GAME "
+		cout << char(205);
+
+	gotoXY(startX, startY);
+	cout << char(201);
+	gotoXY(startX, startY + 2);
+	cout << char(200);
+
+	gotoXY(startX + 11, startY); // +11 because " NEW GAME " is 10 and plus 1 more  
+	cout << char(187);
+	gotoXY(startX + 11, startY + 2); // +11 because " NEW GAME " is 10 and plus 1 more
+	cout << char(188);
+
+	gotoXY(startX, startY + 1);
+	cout << char(186);
+	gotoXY(startX + 11, startY + 1);
+	cout << char(186);
+
+    // enter your name board
+    startX = 37;
+    startY = 20;
+
+	gotoXY(startX + 2, startY + 1);
+	cout << "Enter your name: ";
+	
+	gotoXY(startX + 1, startY);
+	for (int i = 0; i < 100; i++)
+		cout << char(205);
+
+	gotoXY(startX + 1, startY + 2);
+	for (int i = 0; i < 100; i++)
+		cout << char(205);
+
+	gotoXY(startX, startY);
+	cout << char(201);
+	gotoXY(startX, startY + 2);
+	cout << char(200);
+
+	gotoXY(startX + 101, startY);
+	cout << char(187);
+	gotoXY(startX + 101, startY + 2);
+	cout << char(188);
+
+	gotoXY(startX, startY + 1);
+	cout << char(186);
+	gotoXY(startX + 101, startY + 1);
+	cout << char(186);
+
+    TextColor(ColorCode_White);
 }
 
 int main() {

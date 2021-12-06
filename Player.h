@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 #include <conio.h>
-#define SCREEN_LEFT 5
-#define SCREEN_RIGHT 120
+#define SCREEN_LEFT 10 //used to be 5, fix to 10 due to warning
+#define SCREEN_RIGHT 110 //used to be 120, fix to 10 due to warning
 #define SCREEN_TOP 2
 #define SCREEN_BOTTOM 33
 

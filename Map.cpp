@@ -154,7 +154,7 @@ void MAP::newState() {
 			break;
 		}
 		t++;
-		if (t >= INT_MAX)  //To prevent t from overflow
+		if (t >= _INT_MAX_)  //To prevent t from overflow
 			t = 0;
 	}
 }
@@ -175,7 +175,7 @@ bool MAP::checkCrash() {
 	return false;
 }
 
-
+/*
 int main(){
 	resizeConsole(1300, 700);
 	Nocursortype();
@@ -184,4 +184,4 @@ int main(){
 
  	system("pause");
 	return 0;
- }
+ }*/

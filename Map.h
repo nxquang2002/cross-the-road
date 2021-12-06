@@ -10,7 +10,7 @@
 #include "Level.h"
 #include <thread>
 #include<conio.h>
-#define INT_MAX 1000000		//To prevent overflow
+#define _INT_MAX_ 1000000		//To prevent overflow
 
 using namespace std;
 
