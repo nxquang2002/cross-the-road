@@ -1,5 +1,74 @@
 #include "Game.h"
 
+void GAME::newGame() {
+    system("cls");
+    Nocursortype();
+    TextColor(ColorCode_White);
+
+    drawInputNameBar();
+    
+    bool notiFlag = 0;
+    string tmp = "";
+    int startX = 56;
+    int startY = 21;
+
+    UnNocursortype();
+    gotoXY(startX, startY);
+    
+    while(true) {
+        unsigned char ch = _getch();
+        if (ch == 0 || ch == 224) {
+            _getch();
+            continue;
+        }
+        else {
+            if (ch == ESC) {
+                // back to the previous menu
+                return;
+            }
+            else if (ch == ENTER) {
+                if (tmp.size() > 32)
+                    continue;
+                subNewGame();
+                return;
+            }
+            else if (ch == BACKSPACE) {
+                if (!tmp.empty()) {    
+                    Nocursortype();
+                    tmp.pop_back();
+                    gotoXY(startX, startY);
+                    cout << "                                                                                 ";
+                    if (tmp.size() <= 32 && notiFlag) {
+                        notiFlag = false;
+                        gotoXY(startX - 17, startY + 2);
+                        cout << "                                                  ";
+                        gotoXY(startX + tmp.size(), startY);
+                    }
+                    gotoXY(startX, startY);
+                    cout << tmp;
+                    UnNocursortype();
+                } 
+            }
+            else {
+                if (tmp.size() == 81) //input name bar bounding box
+                    continue;
+                Nocursortype();
+                tmp.push_back(ch);
+                if (tmp.size() > 32 && !notiFlag) {
+                    notiFlag = true;
+                    TextColor(ColorCode_DarkRed);
+                    gotoXY(startX - 17, startY + 2);
+                    cout << "Your name must be between 0 and 32 characters long";
+                    TextColor(ColorCode_White);
+                }
+                gotoXY(startX, startY);
+                cout << tmp;
+                UnNocursortype();
+            }
+        }
+    }
+}
+
 void GAME::menu() {
 	const char Title[][82] = { { 32,95,95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								 { 32,'_',95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
@@ -70,8 +139,8 @@ void GAME::menu() {
 					{
 					case 0:
 					{
-						/*system("cls");
-						NewGame();*/
+						system("cls");
+						newGame();
 						break;
 					}
 					case 1:
@@ -97,6 +166,72 @@ void GAME::menu() {
 			}
 		}
 	}
+}
+
+void drawLoadingBar() {
+    int startX = 55;
+    int startY = 17;
+    
+    gotoXY(startX, startY + 1);
+	cout << "Loading ";
+
+    gotoXY(startX + 14, startY);
+	for (int i = 0; i < 51; i++) 
+		cout << char(205);
+
+	gotoXY(startX + 14, startY + 2); 
+	for (int i = 0; i < 51; i++) 
+		cout << char(205);    
+
+    gotoXY(startX + 13, startY);
+	cout << char(201);
+	gotoXY(startX + 13, startY + 2);
+	cout << char(200);
+
+    gotoXY(startX + 65, startY); 
+	cout << char(187);
+	gotoXY(startX + 65, startY + 2); 
+	cout << char(188);
+
+	gotoXY(startX + 13, startY + 1);
+	cout << char(186);
+	gotoXY(startX + 65, startY + 1);
+	cout << char(186);
+
+    for (int i = 0; i <= 100; i++) {
+		gotoXY(startX + 8, startY + 1);
+		cout << i << "%";
+        if (!(i % 2)) {
+            gotoXY(startX + 14 + i / 2, startY + 1);
+            cout << char(219);
+        }
+		Sleep(10);
+	}
+}
+
+void subNewGame() {
+    system("cls");
+    Nocursortype();
+	TextColor(ColorCode_White);
+
+	int startX = 55;
+    int startY = 20;
+    clock_t begin, end;
+	begin = clock();
+    
+    /*
+        do something here
+    */
+	
+    drawLoadingBar();
+	
+    end = clock();
+
+	gotoXY(startX + 13, startY);
+	cout << "Loading time: " << (float)(end - begin) / CLOCKS_PER_SEC << "s";
+    gotoXY(startX + 13, startY + 2);
+	cout << "Press any key to continue...";
+	_getch();
 }
 
 int main() {
