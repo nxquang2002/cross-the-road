@@ -18,8 +18,12 @@ using namespace std;
 
 class GAME {
 public:
-	void newGame();
+	bool printCongrat();
+	int returnChoice(string menu[], const int length, int x, int y);
 	void menu();
+	bool printLose();
+	bool saveGameMenu();
+	bool backToMenu();
 };
 
 void drawLoadingBar();
