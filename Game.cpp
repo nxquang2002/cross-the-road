@@ -70,7 +70,7 @@ void GAME::newGame() {
 }
 
 void GAME::menu() {
-	const unsigned char Title[][82] = { { 32,95,95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
+	const char Title[][82] = { { 32,95,95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								 { 32,'_',95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								{ '|',32,32,'_','_',32,92,32,	 32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,'|',32,178,	   32,32,32,32,32,  32,32,'/',32,'_','_','_',178,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								{ '|',32,178,'_','_',')',32,')', 32,32,'_','_','_',32,32,	 32,32,'_','_',32,'_',32,	  32,32,'_','_','|',32,178,	   32,32,32,32,32,  32,'/',32,32,178,32,32,32,		32,'_',32,'_','_',32,	 32,32,'_','_','_',32,32,	 32,'_','_','_',32,    32,'_','_','_',32,	 '(','_',')', 32,'_',32,'_','_',32,32,	  32,32,'_','_',32,'_',32},
@@ -86,18 +86,46 @@ void GAME::menu() {
 			cout << Title[i][j];
 		}
 	}
-	x += 30;
+	x += 28;
 	y += 2;
-	string menu[] = { "1. New game", "2. Load game", "3. Settings", "4. Exit" };
+	string prompt[] = { "1. New game", "2. Load game", "3. Settings", "4. Exit" };
 	const int length = 4;
 	int choice = 0;
 	while (true) {
-		for (int i = 0; i < 4; i++)
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			break;
+		}
+		case 1:
+		{
+			break;
+		}
+		case 2:
+		{
+			break;
+		}
+		case 3:
+		{
+			exit(1);
+			break;
+		}
+		}
+		break;
+	}
+}
+
+int GAME::returnChoice(string menu[], const int length, int x, int y) {
+	int choice = 0;
+	while (true) {
+		for (int i = 0; i < length; i++)
 		{
 			gotoXY(x, y + i);
 			cout << "                      ";
 		}
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < length; i++)
 		{
 			if (i == choice)
 			{
@@ -122,12 +150,12 @@ void GAME::menu() {
 					if (choice > 0)
 						choice--;
 					else
-						choice = 3;
+						choice = length - 1;
 					break;
 				}
 				if (key == 'S' || key == 's' || key == 80)
 				{
-					if (choice < 3)
+					if (choice < length - 1)
 						choice++;
 					else
 						choice = 0;
@@ -135,36 +163,178 @@ void GAME::menu() {
 				}
 				if (key == 13)
 				{
-					switch (choice)
-					{
-					case 0:
-					{
-						system("cls");
-						newGame();
-						break;
-					}
-					case 1:
-					{
-						/*system("cls");
-						LoadGame();*/
-						break;
-					}
-					case 2:
-					{
-						/*system("cls");
-						Setting();*/
-						break;
-					}
-					case 3:
-					{
-						exit(0);
-						break;
-					}
-					}
-					break;
+					return choice;
 				}
 			}
 		}
+	}
+}
+
+bool GAME::printCongrat() {
+	int x = 45, y = 10;
+	const string title[8] = {
+	"                                 _         _       _   _             ",
+	"                                | |       | |     | | (_)            ",
+	"  ___ ___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_ _  ___  _ __  ",
+	" / __/ _ \\| '_ \\ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \\| '_ \\ ",
+	"| (_| (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | |",
+	" \\___\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|",
+	"                  __/ |                                              ",
+	"                 |___/                                               " };
+	for (int i = 0; i < 8; i++) {
+		gotoXY(x, y++);
+		cout << title[i] << "\n";
+	}
+	x = 70;
+	y = 20;
+	gotoXY(x, y);
+	cout << "Wanna start new game?\n";
+	x = 75;
+	y = 22;
+	string prompt[] = { "1. Yes", "2. No"};
+	const int length = 2;
+	int choice = 0;
+	while (true) {
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			return true;
+			break;
+		}
+		case 1:
+		{
+			return false;
+			break;
+		}
+		}
+		break;
+	}
+}
+
+bool GAME::printLose() {
+	int x = 65, y = 10;
+	const string title[8] = {
+	" _____               _     _ _ _ ",
+	"/  __ \\             | |   | | | |",
+	"| /  \\/_ __ __ _ ___| |__ | | | |",
+	"| |   | '__/ _` / __| '_ \\| | | |",
+	"| \\__/\\ | | (_| \\__ \\ | | |_|_|_|",
+	" \\____/_|  \\__,_|___/_| |_(_|_|_)",
+	"                                  ", 
+	"                                  "};
+	for (int i = 0; i < 8; i++) {
+		gotoXY(x, y++);
+		cout << title[i] << "\n";
+	}
+	x += 10;
+	y += 2;
+	gotoXY(x, y);
+	cout << "Wanna replay?\n";
+	x += 3;
+	y += 2;
+	string prompt[] = { "1. Yes", "2. No" };
+	const int length = 2;
+	int choice = 0;
+	while (true) {
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			return true;
+			break;
+		}
+		case 1:
+		{
+			return false;
+			break;
+		}
+		}
+		break;
+	}
+}
+
+bool GAME::saveGameMenu() {
+	int x = 35, y = 10;
+	const string title[8] = {
+	"                     _     _                                                          ___  ",
+	"                    | |   | |                                                        |__ \\ ",
+	"__      ____ _ _ __ | |_  | |_ ___    ___  __ ___   _____    __ _  __ _ _ __ ___   ___  ) |",
+	"\\ \\ /\\ / / _` | '_ \\| __| | __/ _ \\  / __|/ _` \\ \\ / / _ \\  / _` |/ _` | '_ ` _ \\ / _ \\/ / ",
+	" \\ V  V / (_| | | | | |_  | || (_) | \\__ \\ (_| |\\ V /  __/ | (_| | (_| | | | | | |  __/_|  ",
+	"  \\_/\\_/ \\__,_|_| |_|\\__|  \\__\\___/  |___/\\__,_| \\_/ \\___|  \\__, |\\__,_|_| |_| |_|\\___(_)  ",
+	"                                                             __/ |                         ",
+	"                                                            |___/                          "};
+	for (int i = 0; i < 8; i++) {
+		gotoXY(x, y++);
+		cout << title[i] << "\n";
+	}
+	x = 75;
+	y = 20;
+	string prompt[] = { "1. Yes", "2. No" };
+	const int length = 2;
+	int choice = 0;
+	while (true) {
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			//save game function
+			return true;
+			break;
+		}
+		case 1:
+		{
+			return false;
+			break;
+		}
+		}
+		break;
+	}
+}
+
+bool GAME::backToMenu() {
+	int x = 50, y = 10;
+	const string title[8] = {
+	" _                _      _                                    ___  ",
+	"| |              | |    | |                                  |__ \\ ",
+	"| |__   __ _  ___| | __ | |_ ___    _ __ ___   ___ _ __  _   _  ) |",
+	"| '_ \\ / _` |/ __| |/ / | __/ _ \\  | '_ ` _ \\ / _ \\ '_ \\| | | |/ / ",
+	"| |_) | (_| | (__|   <  | || (_) | | | | | | |  __/ | | | |_| |_|  ",
+	"|_.__/ \\__,_|\\___|_|\\_\\  \\__\\___/  |_| |_| |_|\\___|_| |_|\\__,_(_)  ",
+	"                                                                    ",
+	"                                                                    " };
+	for (int i = 0; i < 8; i++) {
+		gotoXY(x, y++);
+		cout << title[i] << "\n";
+	}
+	x = 75;
+	y = 20;
+	string prompt[] = { "1. Save Game", "2. Cancel" };
+	const int length = 2;
+	int choice = 0;
+	while (true) {
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			system("cls");
+			saveGameMenu();
+			return true;
+			break;
+		}
+		case 1:
+		{
+			//cancel
+			return false;
+			break;
+		}
+		}
+		break;
 	}
 }
 
