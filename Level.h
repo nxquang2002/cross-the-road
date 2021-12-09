@@ -13,11 +13,14 @@ private:
 	int lightPhase;
 	int epoch;
 public:
-	LEVEL(int nLevel = 1, int speed = 2, int distance = 7, int lightPhase = 20, int epoch = 5);
+	LEVEL(int nLevel = 1, int speed = 2, int distance = 7, int lightPhase = 50000, int epoch = 1000);
 	void NewLevel();
 	int getSpeed();
 	int getDistance();
 	int getLightPhase();
+	int getEpoch();
+
+	void displayLevel();
 };
 
 #endif
