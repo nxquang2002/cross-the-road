@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 #include <conio.h>
-#define SCREEN_LEFT 10 //used to be 5, fix to 10 due to warning
-#define SCREEN_RIGHT 110 //used to be 120, fix to 10 due to warning
+#define SCREEN_LEFT 5
+#define SCREEN_RIGHT 120
 #define SCREEN_TOP 2
 #define SCREEN_BOTTOM 33
 
@@ -26,13 +26,14 @@ public:
 	void moveDown();
 	void drawPlayer();
 	void deleteOldPlayer();
-	bool isCollide(int posX, int posY, ENEMY* currentEnemy);
+	//bool isCollide(int posX, int posY, ENEMY* currentEnemy);
+	bool isCollide(ENEMY* currentEnemy);
 	bool checkCrash(vector<ENEMY*> enemy);
 	void crashEffect();
 	void drawEffect(char** shape, int width, int height);
 	void getCurrentRows(vector<int> &rows); //Get rows index, where player are standing
-
-	bool isCollide(ENEMY* currentEnemy);
+	bool checkWin();
+	void setPosition(int x, int y);
 };
 
 #endif // !_PLAYER_H_

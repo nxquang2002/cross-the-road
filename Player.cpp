@@ -38,6 +38,15 @@ void PLAYER::moveRight() {
 	drawPlayer();
 }
 
+bool PLAYER::checkWin() {
+	int bot = (pos.getY() + height)/5 - 1;
+	if (bot < 0) {
+		isWin = true;
+		return true;
+	}
+	return false;
+}
+
 void PLAYER::drawPlayer() {
 	string shape[] = {
 		" o ",
@@ -49,8 +58,6 @@ void PLAYER::drawPlayer() {
 			cout << shape[i + height][j];
 		}
 	}
-	//gotoXY(pos.getX() + width + 1, pos.getY());
-	//cout << '(' << pos.getX() << ',' << pos.getY() << ")";
 }
 
 void PLAYER::deleteOldPlayer() {
@@ -71,6 +78,7 @@ void PLAYER::deleteOldPlayer() {
 	}
 }
 
+/*
 bool PLAYER::isCollide(int posX, int posY, ENEMY* currentEnemy) {
 	if (posX >= currentEnemy->getPos().getX() - currentEnemy->getWidth() &&
 		posX <= currentEnemy->getPos().getX() + currentEnemy->getWidth() &&
@@ -79,7 +87,7 @@ bool PLAYER::isCollide(int posX, int posY, ENEMY* currentEnemy) {
 		return true;
 
 	return false;
-}
+}*/
 
 bool PLAYER::isCollide(ENEMY* currentEnemy) {
 	if (pos.getX() + width < currentEnemy->getPos().getX() - currentEnemy->getWidth())
@@ -97,9 +105,6 @@ bool PLAYER::isCollide(ENEMY* currentEnemy) {
 bool PLAYER::checkCrash(vector<ENEMY*> enemy) {
 	int posX = pos.getX(), posY = pos.getY();
 	for (int i = 0; i < enemy.size(); i++) {
-		//for (int k = -width; k < width + 1; k++) {
-		//	if (isCollide(posX + k, posY + 1, enemy[i])) return true;
-		//}
 		if (isCollide(enemy[i])) return true;
 	}
 	return false;
@@ -174,4 +179,9 @@ void PLAYER::crashEffect() {
 	for (int i = 0; i < y; i++)
 		delete[] shape[i];
 	delete[] shape;
+}
+
+void PLAYER::setPosition(int x, int y) {
+	pos.setX(x);
+	pos.setY(y);
 }
