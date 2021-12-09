@@ -33,6 +33,8 @@ void MAP::drawMap() {
 	}
 
 	drawRecSingle(130, 1, 40, 20);
+	drawRecSingle(130, 24, 40, 10);
+
 	gotoXY(145, 2);
 	cout << "INSTRUCTION";
 	gotoXY(135, 5);
@@ -45,6 +47,14 @@ void MAP::drawMap() {
 	wcout << "[" << (char)17 << "]: Left";
 	gotoXY(135, 13);
 	cout << "[P]: Pause";
+	gotoXY(135, 15);
+	cout << "[T] Load game";
+	gotoXY(135, 17);
+	cout << "[S] Save game";
+
+
+	gotoXY(145, 25);
+	cout << "PAUSE PANEL";
 }
 
 void MAP::drawRecSingle(int ox, int oy, short width, short height) {
@@ -110,18 +120,19 @@ void MAP::drawPlayer() {
 }
 
 void MAP::updatePlayerPos(char key) {
+	key = tolower(key);
 	switch (key)
 	{
-	case 72:	//Up
+	case 'w' :	//Up
 		player.moveUp();
 		break;
-	case 80:	//Down
+	case 's':	//Down
 		player.moveDown();
 		break;
-	case 77:	//Right
+	case 'd':	//Right
 		player.moveRight();
 		break;
-	case 75:	//Left
+	case 'a':	//Left
 		player.moveLeft();
 		break;
 	default:
@@ -129,33 +140,115 @@ void MAP::updatePlayerPos(char key) {
 	}
 }
 
-
+//Initialize new state.
 void MAP::newState() {
+	system("cls");
+	int speed = level.getSpeed();
+	int dist = level.getDistance();
+
+	rows.~ROWS();
+	new(&rows) ROWS(dist);
+	rows.initializeState(speed);
+	player.deleteOldPlayer();
+	player.setPosition(50, 33);
+
+	drawMap();
+	drawPlayer();
+	gotoXY(10, 37);
+	level.displayLevel();
+}
+
+int MAP::pausePanel() {
+	string opt[4] = {
+		"1. Continue", "2. Save game", "3. Load game", "4. Back to menu"
+	};
+	for (int i = 0; i < 4; ++i) {
+		gotoXY(135, 27 + 2 * i);
+		cout << opt[i];
+	}
+
+	int option = 0;
+	gotoXY(135, 27);
+	TextColor(11);
+	cout << opt[option];
+	TextColor(15);
+
+	char key;
+	while (true) {
+		if (_kbhit) {
+			key = _getch();
+			if (key == 13)
+				return option;
+			else if (key == 'w' || key == 'W') {
+				gotoXY(135, 27 + 2 * option);
+				cout << opt[option];
+				option--;
+				if (option < 0) option = 3;
+				gotoXY(135, 27 + 2 * option);
+				TextColor(11);
+				cout << opt[option];
+				TextColor(15);
+			}
+			else if (key == 's' || key == 'S') {
+				gotoXY(135, 27 + 2 * option);
+				cout << opt[option];
+				option++;
+				if (option > 3) option = 0;
+				gotoXY(135, 27 + 2 * option);
+				TextColor(11);
+				cout << opt[option];
+				TextColor(15);
+			}
+		}
+	}
+}
+
+void MAP::runGame() {
+	int t = 0;
 	char key;
 	int speed = level.getSpeed();
 	int distance = level.getDistance();
 	int lightPhase = level.getLightPhase();
-	rows.initializeState(speed);
-	drawMap();
-	drawPlayer();
-
-	int t = 0;
+	int epoch = level.getEpoch();
+	newState();
 	while (!isEnd) {
-		rows.newState(t, speed, 50000); //time - speed - lightPhase
+		if (!isPause) {
+			rows.newState(t, speed, lightPhase, epoch);
+		}
 		if (_kbhit()) {
 			key = _getch();
 			if (key == 27) {
+				isEnd = true;
 				break;
 			}
-			else updatePlayerPos(key);
+			else if (key == 'p' || key == 'P') {
+				isPause = true;
+				int pauseOption = pausePanel();		//Call Pause panel and return option
+				if (pauseOption == 0)
+					isPause = false;
+				else if (pauseOption == 3)
+					break;
+			}
+			else {
+				if(!isPause) updatePlayerPos(key);
+			}
 		}
 		if (checkCrash()) {
 			player.crashEffect();
 			break;
 		}
 		t++;
-		if (t >= _INT_MAX_)  //To prevent t from overflow
+		if (t >= INT_MAX)  //To prevent t from overflow
 			t = 0;
+		if (player.checkWin()) {
+			system("pause");
+			level.NewLevel();
+			speed = level.getSpeed();
+			distance = level.getDistance();
+			lightPhase = level.getLightPhase();
+			epoch = level.getEpoch();
+			newState();
+		}
 	}
 }
 
@@ -180,7 +273,7 @@ int main(){
 	resizeConsole(1300, 700);
 	Nocursortype();
  	MAP map;
-	map.newState();
+	map.runGame();
 
  	system("pause");
 	return 0;
