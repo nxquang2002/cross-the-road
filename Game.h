@@ -3,6 +3,7 @@
 #include <iostream>
 #include <chrono>
 #include <conio.h>
+#include "Map.h"
 #include "ConsoleManagement.h"
 
 #define ESC 27
@@ -18,12 +19,16 @@ using namespace std;
 
 class GAME {
 public:
+	void newGame();
+	void menu();
+	void setting();
 	bool printCongrat();
 	int returnChoice(string menu[], const int length, int x, int y);
-	void menu();
 	bool printLose();
 	bool saveGameMenu();
 	bool backToMenu();
+private:
+	MAP map;
 };
 
 void drawLoadingBar();
@@ -31,3 +36,4 @@ void subNewGame();
 void drawInputNameBar();
 
 #endif // !GAME_H_
+ 
