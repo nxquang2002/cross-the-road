@@ -31,6 +31,7 @@ public:
     bool isOutOfMap();
     bool move();
     void deleteOldEnemy();
+    void saveEnemy(ofstream& ofs);
     ~ENEMY();
 };
 

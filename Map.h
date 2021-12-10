@@ -10,6 +10,7 @@
 #include "Level.h"
 #include <thread>
 #include<conio.h>
+#include <fstream>
 #define INT_MAX 1000000		//To prevent overflow
 
 using namespace std;
@@ -37,6 +38,8 @@ public:
 	bool checkCrash();
 	void runGame();		//Most important function.
 	int pausePanel();
+	void saveGame();
+	void loadGame();
 };
 
 #endif // !_MAP_H_

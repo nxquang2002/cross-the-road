@@ -268,6 +268,33 @@ bool MAP::checkCrash() {
 	return false;
 }
 
+void MAP::saveGame() {
+	ofstream ofs;
+	string fileName = "Temporary Name"; //temp
+	ofs.open(fileName, ios::binary);
+	if (!ofs.is_open()) {
+		cout << "Cannot create file!\n";
+		return;
+	}
+	player.savePlayer(ofs);
+	level.saveLevel(ofs);
+	rows.saveRows(ofs);
+	ofs.close();
+}
+
+void MAP::loadGame() {
+	ifstream ifs;
+	string fileName = "Temporary Name"; //temp
+	ifs.open(fileName, ios::binary);
+	if (!ifs.is_open()) {
+		cout << "Cannot open file!\n";
+		return;
+	}
+	player.loadPlayer(ifs);
+	level.loadLevel(ifs);
+	rows.loadRows(ifs, level);
+}
+
 /*
 int main(){
 	resizeConsole(1300, 700);

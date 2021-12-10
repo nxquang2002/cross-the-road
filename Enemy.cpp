@@ -12,10 +12,10 @@ ENEMY::ENEMY(POSITION pos, bool right, int spd) {
     this->pos = pos;
     this->width = 0;
     this->height = 0;
+    this->speed = spd;
     this->shape = nullptr;
     this->isOutMap = true;
-    this->dirRight = right;
-    this->speed = spd;
+    this->dirRight = right;   
 }
 
 int ENEMY::getWidth() {
@@ -188,20 +188,9 @@ string Dinosaur::getShapeFile() {
         return "dino1.txt";
     return "dino.txt";
 }
-/*
-int main()
-{
-    ENEMY* e = new Dinosaur(POSITION(25, 10));
-    e->getShape();
-    e->drawShape();
-    Sleep(500);
-    for (int i = 0; i < 10; i++) {
-        e->deleteOldEnemy();
-        Sleep(200);
-        e->move();
-        e->drawShape();
-        Sleep(200);
-    }
-    system("pause");
-    return 0;
-}*/
+
+void ENEMY::saveEnemy(ofstream& ofs) {
+    ofs.write((char*)&pos, sizeof(POSITION));
+     ofs.write((char*)&width, sizeof(int));
+}
+

@@ -4,6 +4,7 @@
 #include "ConsoleManagement.h"
 #include "Enemy.h"
 #include "Position.h"
+#include "Level.h"
 #include <time.h>
 #include <vector>
 #include <assert.h>
@@ -34,6 +35,8 @@ public:
     void newState();
     void draw();
     void deleteExpireEnemy();
+    void saveSingleRow(ofstream& ofs);
+    void loadSingleRow(ifstream& ifs, LEVEL level);
 };
 
 #endif // !_SINGLEROW_H_

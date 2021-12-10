@@ -147,3 +147,40 @@ void SINGLEROW::deleteExpireEnemy() {
         delete temp;
     }
 }
+
+void SINGLEROW::saveSingleRow(ofstream& ofs) {
+    int n = enemies.size();
+    ofs.write((char*)&dirRight, sizeof(bool));
+    ofs.write((char*)&redLight, sizeof(bool));
+    ofs.write((char*)&timeRedLight, sizeof(int));
+    ofs.write((char*)&n, sizeof(int)); 
+    for (int i = 0; i < n; i++) {
+        enemies[i]->saveEnemy(ofs);
+    }
+}
+
+void SINGLEROW::loadSingleRow(ifstream& ifs, LEVEL level) {
+    int n, w;
+    POSITION p;
+    ifs.read((char*)&dirRight, sizeof(bool));
+    ifs.read((char*)&redLight, sizeof(bool));
+    ifs.read((char*)&timeRedLight, sizeof(int));
+    ifs.read((char*)&n, sizeof(int)); 
+    for (int i = 0; i < n; i++) {
+        ENEMY* tmp = nullptr;
+        ifs.read((char*)&p, sizeof(POSITION));
+        ifs.read((char*)&w, sizeof(int));
+        switch(w) {
+            case 2:
+                tmp = new Bird(p, dirRight, level.getSpeed());
+            case 6:
+                tmp = new Car(p, dirRight, level.getSpeed());
+            case 7:
+                tmp = new Dinosaur(p, dirRight, level.getSpeed());
+            case 8:
+                tmp = new Truck(p, dirRight, level.getSpeed());
+        }
+        tmp->getShape();
+        enemies.push_back(tmp);
+    }
+}

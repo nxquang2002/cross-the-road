@@ -102,6 +102,23 @@ void ROWS::newState(int t, int v, int lightPhase, int epoch) {
     //cout << "t = " << t;
 }
 
+void ROWS::saveRows(ofstream& ofs) {
+    for (int i = 0; i < ROW_NUM; i++) {
+        rows[i]->saveSingleRow(ofs);
+    }
+}
+
+void ROWS::loadRows(ifstream& ifs, LEVEL level) {
+    for (int i = 0; i < ROW_NUM; i++) {
+        SINGLEROW* tmp = nullptr;
+        if(i % 2)
+            tmp = new SINGLEROW(false, 3 + 5 * (i+1), level.getDistance());   //parameters: dirRight, rowY, distance
+        else tmp = new SINGLEROW(true, 3 + 5 * (i+1), level.getDistance());
+        tmp->loadSingleRow(ifs, level);
+        rows.push_back(tmp);
+    }
+}
+
 //newState ver2
 /*
 void ROWS::newState(int t, int v, int lightPhase) {

@@ -1,7 +1,7 @@
 #ifndef _LEVEL_H_
 #define _LEVEL_H_
 #include <iostream>
-
+#include <fstream>
 
 using namespace std;
 
@@ -19,8 +19,9 @@ public:
 	int getDistance();
 	int getLightPhase();
 	int getEpoch();
-
 	void displayLevel();
+	void saveLevel(ofstream& ofs);
+	void loadLevel(ifstream& ifs);
 };
 
 #endif

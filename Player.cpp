@@ -185,3 +185,15 @@ void PLAYER::setPosition(int x, int y) {
 	pos.setX(x);
 	pos.setY(y);
 }
+
+void PLAYER::savePlayer(ofstream& ofs) {
+	ofs.write((char*)&pos, sizeof(POSITION));
+	ofs.write((char*)&isDead, sizeof(bool));
+	ofs.write((char*)&isWin, sizeof(bool));
+}
+
+void PLAYER::loadPlayer(ifstream& ifs) {
+	ifs.read((char*)&pos, sizeof(POSITION));
+	ifs.read((char*)&isDead, sizeof(bool));
+	ifs.read((char*)&isWin, sizeof(bool));
+}

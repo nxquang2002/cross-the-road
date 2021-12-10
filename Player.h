@@ -34,6 +34,8 @@ public:
 	void getCurrentRows(vector<int> &rows); //Get rows index, where player are standing
 	bool checkWin();
 	void setPosition(int x, int y);
+	void savePlayer(ofstream& ofs);
+	void loadPlayer(ifstream& ifs);
 };
 
 #endif // !_PLAYER_H_
