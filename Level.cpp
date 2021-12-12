@@ -14,8 +14,18 @@ void LEVEL::NewLevel() {
 	nLevel++;
 	speed++;
 	distance--;
-	lightPhase -= 10000;
-	epoch -= (epoch / 100) * 20;
+	lightPhase -= 5000;
+	epoch -= (epoch / 100) * 20; //epoch = 80% * epoch
+}
+
+void LEVEL::moveToLevel(int lvl) {
+	if (lvl <= 0 || lvl > 5)
+		return;
+	nLevel = lvl;
+	speed = MIN_SPEED + (lvl-1);					//a little hardcode
+	distance = MAX_DISTANCE - (lvl-1);
+	lightPhase = MAX_LIGHTPHASE - (lvl - 1) * 5000;
+	epoch = MAX_EPOCH * pow(0.8, lvl - 1);
 }
 
 int LEVEL::getSpeed() {
