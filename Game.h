@@ -21,6 +21,8 @@ class GAME {
 public:
 	void newGame();
 	void menu();
+	void title();
+	void levelUp();
 	void setting();
 	bool printCongrat();
 	int returnChoice(string menu[], const int length, int x, int y);
