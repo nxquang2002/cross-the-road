@@ -1,7 +1,7 @@
 #include "Map.h"
 
 
-MAP::MAP() : width(120), height(35), isPause(0), isEnd(0), player(POSITION(50, 33)), level(LEVEL(1)) {
+MAP::MAP(GAME *gm) : width(120), height(35), isPause(0), isEnd(0), player(POSITION(50, 33)), level(LEVEL(1)), game(gm) {
 	for (int i = 0; i <= width; ++i) {
 		map[0][i] = map[height][i] = '-';
 	}
@@ -55,55 +55,11 @@ void MAP::drawMap() {
 
 	gotoXY(145, 25);
 	cout << "PAUSE PANEL";
+	gotoXY(10, 37);
+	level.displayLevel();
+	cout << "   SPEED: " << level.getSpeed();
 }
 
-void MAP::drawRecSingle(int ox, int oy, short width, short height) {
-	gotoXY(ox, oy);
-	cout << (char)218;				//Top-left corner
-	for (int i = 1; i <= width; ++i) {
-		cout << (char)196;
-	}
-	cout << (char)191 << endl;
-	gotoXY(ox, ++oy);
-	for (int i = 1; i <= height; ++i) {
-		cout << (char)179;
-		for (int j = 1; j <= width; ++j) {
-			cout << " ";
-		}
-		cout << (char)179 << endl;
-		gotoXY(ox, ++oy);
-	}
-
-	cout << (char)192;
-	for (int i = 1; i <= width; ++i) {
-		cout << (char)196;
-	}
-	cout << (char)217;
-}
-
-void MAP::drawRecDouble(int ox, int oy, short width, short height) {
-	gotoXY(ox, oy);
-	cout << (char)201;					//Top-left corner
-	for (int i = 1; i <= width; ++i) {
-		cout << (char)205;
-	}
-	cout << (char)187 << endl;
-	gotoXY(ox, ++oy);
-	for (int i = 1; i <= height; ++i) {
-		cout << (char)186;
-		for (int j = 1; j <= width; ++j) {
-			cout << " ";
-		}
-		cout << (char)186 << endl;
-		gotoXY(ox, ++oy);
-	}
-
-	cout << (char)200;
-	for (int i = 1; i <= width; ++i) {
-		cout << (char)205;
-	}
-	cout << (char)188;
-}
 
 //To draw any object from its pos, shape, width and height
 void MAP::drawObject(POSITION pos, char** shape, int width, int height) {
@@ -123,7 +79,7 @@ void MAP::updatePlayerPos(char key) {
 	key = tolower(key);
 	switch (key)
 	{
-	case 'w' :	//Up
+	case 'w':	//Up
 		player.moveUp();
 		break;
 	case 's':	//Down
@@ -154,14 +110,20 @@ void MAP::newState() {
 
 	drawMap();
 	drawPlayer();
-	gotoXY(10, 37);
-	level.displayLevel();
 }
 
+void MAP::continueGame() {
+	system("cls");
+	drawMap();
+	drawPlayer();
+}
+
+//Show/hide pause panel
 int MAP::pausePanel() {
 	string opt[4] = {
 		"1. Continue", "2. Save game", "3. Load game", "4. Back to menu"
 	};
+	/*
 	for (int i = 0; i < 4; ++i) {
 		gotoXY(135, 27 + 2 * i);
 		cout << opt[i];
@@ -173,8 +135,10 @@ int MAP::pausePanel() {
 	cout << opt[option];
 	TextColor(15);
 
+	
 	char key;
 	while (true) {
+
 		if (_kbhit) {
 			key = _getch();
 			if (key == 13)
@@ -200,9 +164,20 @@ int MAP::pausePanel() {
 				TextColor(15);
 			}
 		}
+	}*/
+	int option = returnChoice(opt, 4, 135, 27);
+	hidePausePanel(opt, 4, 135, 27);
+	return option;
+}
+void MAP::hidePausePanel(string option[], int length, int x, int y) {
+	for (int i = 0; i < length; ++i) {
+		gotoXY(x, y + i);
+		for (int j = 0; j < option[i].length(); ++j)
+			cout << " ";
 	}
 }
 
+//runGame ver1
 void MAP::runGame() {
 	int t = 0;
 	char key;
@@ -218,8 +193,90 @@ void MAP::runGame() {
 		if (_kbhit()) {
 			key = _getch();
 			if (key == 27) {
-				isEnd = true;
+				if (game->backToMenu()) {
+					isEnd = true;
+					break;
+				}
+				else continueGame();
+			}
+			else if (key == 'p' || key == 'P') {
+				isPause = true;
+				int pauseOption = pausePanel();		//Call Pause panel and return option
+				if (pauseOption == 0)
+					isPause = false;
+				else if (pauseOption == 3) {
+					if (game->backToMenu())
+						break;
+					else {
+						continueGame();
+						isPause = false;
+					}
+				}
+			}
+			else {
+				if (!isPause) updatePlayerPos(key);
+			}
+		}
+		if (checkCrash()) {
+			player.crashEffect();
+			Sleep(1000);
+			if (game->printLose()) {
+				//Lose and start a new game
+				subNewGame();
+				replay();
+				speed = level.getSpeed();
+				distance = level.getDistance();
+				lightPhase = level.getLightPhase();
+				epoch = level.getEpoch();
+			}
+			else {
+				system("cls");
+				drawLoadingBar();
 				break;
+			}
+		}
+		t++;
+		if (t >= INT_MAX)  //To prevent t from overflow
+			t = 0;
+		if (player.checkWin()) {			//If user pass level
+			system("pause");
+			if (game->printCongrat()) {	//Continue playing
+				subNewGame();
+				levelUp();
+				speed = level.getSpeed();
+				distance = level.getDistance();
+				lightPhase = level.getLightPhase();
+				epoch = level.getEpoch();
+			}
+			else {
+				system("cls");
+				drawLoadingBar();
+				break;
+			}
+			
+		}
+	}
+}
+
+//runGame ver2
+/*
+int MAP::runGame() {
+	int t = 0;
+	char key;
+	int speed = level.getSpeed();
+	int distance = level.getDistance();
+	int lightPhase = level.getLightPhase();
+	int epoch = level.getEpoch();
+	newState();
+	while (!isEnd) {
+		if (!isPause) {
+			rows.newState(t, speed, lightPhase, epoch);
+		}
+		if (_kbhit()) {
+			key = _getch();
+			if (key == 27) {
+				isEnd = true;
+				return 0;
 			}
 			else if (key == 'p' || key == 'P') {
 				isPause = true;
@@ -227,29 +284,35 @@ void MAP::runGame() {
 				if (pauseOption == 0)
 					isPause = false;
 				else if (pauseOption == 3)
-					break;
+					return 0;;
 			}
 			else {
-				if(!isPause) updatePlayerPos(key);
+				if (!isPause) updatePlayerPos(key);
 			}
 		}
 		if (checkCrash()) {
 			player.crashEffect();
-			break;
+			isEnd = true;
+			return 2;
 		}
 		t++;
 		if (t >= INT_MAX)  //To prevent t from overflow
 			t = 0;
 		if (player.checkWin()) {
 			system("pause");
-			level.NewLevel();
-			speed = level.getSpeed();
-			distance = level.getDistance();
-			lightPhase = level.getLightPhase();
-			epoch = level.getEpoch();
-			newState();
+			return 1;
 		}
 	}
+}*/
+
+void MAP::levelUp() {
+	level.NewLevel();
+	newState();
+}
+
+void MAP::replay() {
+	level.moveToLevel(1);
+	newState();
 }
 
 bool MAP::checkCrash() {
@@ -295,13 +358,3 @@ void MAP::loadGame() {
 	rows.loadRows(ifs, level);
 }
 
-/*
-int main(){
-	resizeConsole(1300, 700);
-	Nocursortype();
- 	MAP map;
-	map.runGame();
-
- 	system("pause");
-	return 0;
- }*/
