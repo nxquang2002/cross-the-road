@@ -1,9 +1,17 @@
 #include "Game.h"
 
+GAME::GAME() {
+	map = new MAP(this);
+}
+
+GAME::~GAME() {
+	delete map;
+}
+
 void GAME::setting() {
 	system("cls");
 	string opt[2] = { "1. Sound:", "2. Back to menu" };
-	string sound[2] = {" << OFF >>", " << ON  >>" };
+	string sound[2] = { " << OFF >>", " << ON  >>" };
 	int option = 0, optSound = 1;
 	char key;
 
@@ -78,6 +86,9 @@ void GAME::newGame() {
 	UnNocursortype();
 	gotoXY(startX, startY);
 
+	//map->~MAP();			//new game, map is reset
+	//new(&map) MAP(this);
+
 	while (true) {
 		unsigned char ch = _getch();
 		if (ch == 0 || ch == 224) {
@@ -93,7 +104,7 @@ void GAME::newGame() {
 				if (tmp.size() > 32)
 					continue;
 				subNewGame();
-				map.runGame();
+				map->runGame();
 				system("cls");
 				return;
 			}
@@ -134,8 +145,6 @@ void GAME::newGame() {
 	}
 }
 
-
-
 void GAME::title() {
 	const char Title[][82] = { { 32,95,95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
 								 { 32,'_',95,95,95,95,32,32,     32,32,32,32,32,32,32,		 32,32,32,32,32,32,32,		  32,32,32,32,32,'_',32,	   32,32,32,32,32,  32,32,32,'_','_','_','_',32,	32,32,32,32,32,32,		 32,32,32,32,32,32,32,		 32,32,32,32,32,	   32,32,32,32,32,		 32,32,32,	  32,32,32,32,32,32,32,		   },
@@ -155,6 +164,7 @@ void GAME::title() {
 	}
 }
 
+
 void GAME::menu() {
 	title();
 	drawLoadingBar();
@@ -165,8 +175,8 @@ void GAME::menu() {
 	"|  \\/  |                 ",
 	"| .  . | ___ _ __  _   _ ",
 	"| |\\/| |/ _ \\ '_ \\| | | |",
-	"| |  | |  __/ | | | |_| |", 
-	"\\_|  |_/\\___|_| |_|\\__,_|"};
+	"| |  | |  __/ | | | |_| |",
+	"\\_|  |_/\\___|_| |_|\\__,_|" };
 	for (int i = 0; i < 6; i++) {
 		gotoXY(x, y++);
 		cout << title[i] << "\n";
@@ -184,7 +194,6 @@ void GAME::menu() {
 			{
 			case 0:
 			{
-				system("cls");
 				newGame();
 				break;
 			}
@@ -194,7 +203,6 @@ void GAME::menu() {
 			}
 			case 2:
 			{
-				system("cls");
 				setting();
 				break;
 			}
@@ -210,26 +218,70 @@ void GAME::menu() {
 	}
 }
 
-int GAME::returnChoice(string menu[], const int length, int x, int y) {
+bool GAME::backToMenu() {
+	system("cls");
+	int x = 50, y = 10;
+	const string title[8] = {
+	" _                _      _                                    ___  ",
+	"| |              | |    | |                                  |__ \\ ",
+	"| |__   __ _  ___| | __ | |_ ___    _ __ ___   ___ _ __  _   _  ) |",
+	"| '_ \\ / _` |/ __| |/ / | __/ _ \\  | '_ ` _ \\ / _ \\ '_ \\| | | |/ / ",
+	"| |_) | (_| | (__|   <  | || (_) | | | | | | |  __/ | | | |_| |_|  ",
+	"|_.__/ \\__,_|\\___|_|\\_\\  \\__\\___/  |_| |_| |_|\\___|_| |_|\\__,_(_)  ",
+	"                                                                    ",
+	"                                                                    " };
+	for (int i = 0; i < 8; i++) {
+		gotoXY(x, y++);
+		cout << title[i] << "\n";
+	}
+	x = 75;
+	y = 20;
+	string prompt[] = { "1. Save Game", "2. Cancel" };
+	const int length = 2;
+	int choice = 0;
+	while (true) {
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			system("cls");
+			saveGameMenu();
+			return true;
+			break;
+		}
+		case 1:
+		{
+			//cancel
+			return false;
+			break;
+		}
+		}
+		break;
+	}
+}
+
+int returnChoice(string menu[], const int length, int x, int y) {
 	int choice = 0;
 	while (true) {
 		for (int i = 0; i < length; i++)
 		{
 			gotoXY(x, y + i);
-			cout << "                      ";
+			for (int j = 0; j < menu[i].length(); ++j)
+				cout << " ";
 		}
 		for (int i = 0; i < length; i++)
 		{
 			if (i == choice)
 			{
 				TextColor(250);
-				gotoXY(x, y + 2*i);
+				gotoXY(x, y + 2 * i);
 				cout << menu[i];
 				TextColor(7);
 			}
 			else
 			{
-				gotoXY(x, y + 2*i);
+				gotoXY(x, y + 2 * i);
 				cout << menu[i];
 			}
 		}
@@ -260,6 +312,98 @@ int GAME::returnChoice(string menu[], const int length, int x, int y) {
 				}
 			}
 		}
+	}
+}
+
+bool GAME::printCongrat() {
+	system("cls");
+	int x = 53, y = 10;
+	const string title[8] = {
+	"                                 _         _       _   _             ",
+	"                                | |       | |     | | (_)            ",
+	"  ___ ___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_ _  ___  _ __  ",
+	" / __/ _ \\| '_ \\ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \\| '_ \\ ",
+	"| (_| (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | |",
+	" \\___\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|",
+	"                  __/ |                                              ",
+	"                 |___/                                               " };
+	for (int i = 0; i < 8; i++) {
+		gotoXY(x, y++);
+		cout << title[i] << "\n";
+	}
+	x = 65;
+	y = 20;
+	gotoXY(x, y);
+	cout << "BIN! BIN! BIN! YOU HAVE PASS THE LEVEL!\n";
+	gotoXY(x + 12, y + 2);
+	cout << "KEEP GOING?";
+	x = 80;
+	y = 24;
+	string prompt[] = { "1. Yes", "2. No" };
+	const int length = 2;
+	int choice = 0;
+	while (true) {
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			return true;
+			break;
+		}
+		case 1:
+		{
+			return false;
+			break;
+		}
+		}
+		break;
+	}
+}
+
+bool GAME::printLose() {
+	system("cls");
+	int x = 65, y = 10;
+	const string title[8] = {
+	" _____               _     _ _ _ ",
+	"/  __ \\             | |   | | | |",
+	"| /  \\/_ __ __ _ ___| |__ | | | |",
+	"| |   | '__/ _` / __| '_ \\| | | |",
+	"| \\__/\\ | | (_| \\__ \\ | | |_|_|_|",
+	" \\____/_|  \\__,_|___/_| |_(_|_|_)",
+	"                                  ",
+	"                                  " };
+	for (int i = 0; i < 8; i++) {
+		gotoXY(x, y++);
+		cout << title[i] << "\n";
+	}
+	x += 5;
+	y += 2;
+	gotoXY(x, y);
+	cout << "SEE YOU IN THE PARADISE...\n";
+	gotoXY(x + 5, y + 2);
+	cout << "WANNA REPLAY?";
+	x += 8;
+	y += 4;
+	string prompt[] = { "1. Yes", "2. No" };
+	const int length = 2;
+	int choice = 0;
+	while (true) {
+		choice = returnChoice(prompt, length, x, y);
+		switch (choice)
+		{
+		case 0:
+		{
+			return true;
+			break;
+		}
+		case 1:
+		{
+			return false;
+			break;
+		}
+		}
+		break;
 	}
 }
 
@@ -307,97 +451,8 @@ void GAME::levelUp() {
 	}
 }
 
-bool GAME::printCongrat() {
-	int x = 45, y = 10;
-	const string title[8] = {
-	"                                 _         _       _   _             ",
-	"                                | |       | |     | | (_)            ",
-	"  ___ ___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_ _  ___  _ __  ",
-	" / __/ _ \\| '_ \\ / _` | '__/ _` | __| | | | |/ _` | __| |/ _ \\| '_ \\ ",
-	"| (_| (_) | | | | (_| | | | (_| | |_| |_| | | (_| | |_| | (_) | | | |",
-	" \\___\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|",
-	"                  __/ |                                              ",
-	"                 |___/                                               " };
-	for (int i = 0; i < 8; i++) {
-		gotoXY(x, y++);
-		cout << title[i] << "\n";
-	}
-	x = 70;
-	y = 20;
-	gotoXY(x, y);
-	cout << "Wanna start new game?\n";
-	x = 75;
-	y = 22;
-	string prompt[] = { "1. Yes", "2. No" };
-	const int length = 2;
-	int choice = 0;
-	while (true) {
-		choice = returnChoice(prompt, length, x, y);
-		switch (choice)
-		{
-		case 0:
-		{
-			system("cls");
-			return true;
-			break;
-		}
-		case 1:
-		{
-			system("cls");
-			return false;
-			break;
-		}
-		}
-		break;
-	}
-}
-
-bool GAME::printLose() {
-	int x = 65, y = 10;
-	const string title[8] = {
-	" _____               _     _ _ _ ",
-	"/  __ \\             | |   | | | |",
-	"| /  \\/_ __ __ _ ___| |__ | | | |",
-	"| |   | '__/ _` / __| '_ \\| | | |",
-	"| \\__/\\ | | (_| \\__ \\ | | |_|_|_|",
-	" \\____/_|  \\__,_|___/_| |_(_|_|_)",
-	"                                  ",
-	"                                  " };
-	for (int i = 0; i < 8; i++) {
-		gotoXY(x, y++);
-		cout << title[i] << "\n";
-	}
-	x += 10;
-	y += 2;
-	gotoXY(x, y);
-	cout << "Wanna replay?\n";
-	x += 3;
-	y += 2;
-	string prompt[] = { "1. Yes", "2. No" };
-	const int length = 2;
-	int choice = 0;
-	while (true) {
-		choice = returnChoice(prompt, length, x, y);
-		switch (choice)
-		{
-		case 0:
-		{
-			system("cls");
-			return true;
-			break;
-		}
-		case 1:
-		{
-			system("cls");
-			return false;
-			break;
-		}
-		}
-		break;
-	}
-}
-
 bool GAME::saveGameMenu() {
+	system("cls");
 	int x = 35, y = 10;
 	const string title[8] = {
 	"                     _     _                                                          ___  ",
@@ -423,14 +478,12 @@ bool GAME::saveGameMenu() {
 		{
 		case 0:
 		{
-			system("cls");
 			//save game function
 			return true;
 			break;
 		}
 		case 1:
 		{
-			system("cls");
 			return false;
 			break;
 		}
@@ -439,6 +492,7 @@ bool GAME::saveGameMenu() {
 	}
 }
 
+/*
 bool GAME::backToMenu() {
 	int x = 50, y = 10;
 	const string title[8] = {
@@ -479,7 +533,7 @@ bool GAME::backToMenu() {
 		}
 		break;
 	}
-}
+}*/
 
 void drawLoadingBar() {
 	int startX = 55;
@@ -610,6 +664,55 @@ void drawInputNameBar() {
 	cout << char(186);
 
 	TextColor(ColorCode_White);
+}
+
+
+void drawRecSingle(int ox, int oy, short width, short height) {
+	gotoXY(ox, oy);
+	cout << (char)218;				//Top-left corner
+	for (int i = 1; i <= width; ++i) {
+		cout << (char)196;
+	}
+	cout << (char)191 << endl;
+	gotoXY(ox, ++oy);
+	for (int i = 1; i <= height; ++i) {
+		cout << (char)179;
+		for (int j = 1; j <= width; ++j) {
+			cout << " ";
+		}
+		cout << (char)179 << endl;
+		gotoXY(ox, ++oy);
+	}
+
+	cout << (char)192;
+	for (int i = 1; i <= width; ++i) {
+		cout << (char)196;
+	}
+	cout << (char)217;
+}
+
+void drawRecDouble(int ox, int oy, short width, short height) {
+	gotoXY(ox, oy);
+	cout << (char)201;					//Top-left corner
+	for (int i = 1; i <= width; ++i) {
+		cout << (char)205;
+	}
+	cout << (char)187 << endl;
+	gotoXY(ox, ++oy);
+	for (int i = 1; i <= height; ++i) {
+		cout << (char)186;
+		for (int j = 1; j <= width; ++j) {
+			cout << " ";
+		}
+		cout << (char)186 << endl;
+		gotoXY(ox, ++oy);
+	}
+
+	cout << (char)200;
+	for (int i = 1; i <= width; ++i) {
+		cout << (char)205;
+	}
+	cout << (char)188;
 }
 
 

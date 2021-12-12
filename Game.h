@@ -16,26 +16,31 @@
 #define RIGHT 77
 
 using namespace std;
+class MAP;
 
 class GAME {
 public:
+	GAME();
+	~GAME();
 	void newGame();
 	void menu();
 	void title();
 	void levelUp();
 	void setting();
 	bool printCongrat();
-	int returnChoice(string menu[], const int length, int x, int y);
 	bool printLose();
 	bool saveGameMenu();
 	bool backToMenu();
 private:
-	MAP map;
+	MAP *map;
+	string gameName;
 };
 
 void drawLoadingBar();
 void subNewGame();
 void drawInputNameBar();
+int returnChoice(string menu[], const int length, int x, int y);
+void drawRecSingle(int ox, int oy, short width, short height);
+void drawRecDouble(int ox, int oy, short width, short height);
 
-#endif // !GAME_H_
- 
+#endif
