@@ -50,7 +50,7 @@ void MAP::drawMap() {
 	gotoXY(135, 15);
 	cout << "[T] Load game";
 	gotoXY(135, 17);
-	cout << "[S] Save game";
+	cout << "[L] Save game";
 
 
 	gotoXY(145, 25);
@@ -58,6 +58,8 @@ void MAP::drawMap() {
 	gotoXY(10, 37);
 	level.displayLevel();
 	cout << "   SPEED: " << level.getSpeed();
+	gotoXY(10, 39);
+	cout << "PLAYER: " << player.getName();
 }
 
 
@@ -112,6 +114,18 @@ void MAP::newState() {
 	drawPlayer();
 }
 
+void MAP::setPlayerName(string s) {
+	player.setName(s);
+}
+
+void MAP::loadState() {
+	system("cls");
+	player.deleteOldPlayer();
+	
+	drawMap();
+	drawPlayer();
+}
+
 void MAP::continueGame() {
 	system("cls");
 	drawMap();
@@ -123,58 +137,24 @@ int MAP::pausePanel() {
 	string opt[4] = {
 		"1. Continue", "2. Save game", "3. Load game", "4. Back to menu"
 	};
-	/*
-	for (int i = 0; i < 4; ++i) {
-		gotoXY(135, 27 + 2 * i);
-		cout << opt[i];
-	}
-
-	int option = 0;
-	gotoXY(135, 27);
-	TextColor(11);
-	cout << opt[option];
-	TextColor(15);
-
-	
-	char key;
-	while (true) {
-
-		if (_kbhit) {
-			key = _getch();
-			if (key == 13)
-				return option;
-			else if (key == 'w' || key == 'W') {
-				gotoXY(135, 27 + 2 * option);
-				cout << opt[option];
-				option--;
-				if (option < 0) option = 3;
-				gotoXY(135, 27 + 2 * option);
-				TextColor(11);
-				cout << opt[option];
-				TextColor(15);
-			}
-			else if (key == 's' || key == 'S') {
-				gotoXY(135, 27 + 2 * option);
-				cout << opt[option];
-				option++;
-				if (option > 3) option = 0;
-				gotoXY(135, 27 + 2 * option);
-				TextColor(11);
-				cout << opt[option];
-				TextColor(15);
-			}
-		}
-	}*/
+	gotoXY(135, 15);
+	cout << "             ";
+	gotoXY(135, 17);
+	cout << "               ";
 	int option = returnChoice(opt, 4, 135, 27);
 	hidePausePanel(opt, 4, 135, 27);
 	return option;
 }
 void MAP::hidePausePanel(string option[], int length, int x, int y) {
 	for (int i = 0; i < length; ++i) {
-		gotoXY(x, y + i);
+		gotoXY(x, y + 2*i);
 		for (int j = 0; j < option[i].length(); ++j)
 			cout << " ";
 	}
+	gotoXY(135, 15);
+	cout << "[T] Load game";
+	gotoXY(135, 17);
+	cout << "[L] Save game";
 }
 
 //runGame ver1
@@ -213,6 +193,21 @@ void MAP::runGame() {
 					}
 				}
 			}
+			else if (key == 'l' || key == 'L') {
+				if (game->saveGameMenu()) {
+					system("cls");
+					saveGame();
+					drawLoadingBar();
+				} 
+				continueGame();
+			}
+			else if (key == 't' || key == 'T') {
+				game->loadGame();
+				system("cls");
+				subNewGame();
+				system("cls");
+				loadState();
+			}
 			else {
 				if (!isPause) updatePlayerPos(key);
 			}
@@ -223,7 +218,7 @@ void MAP::runGame() {
 			if (game->printLose()) {
 				//Lose and start a new game
 				subNewGame();
-				replay();
+				replay();	//return to level 1
 				speed = level.getSpeed();
 				distance = level.getDistance();
 				lightPhase = level.getLightPhase();
@@ -236,11 +231,17 @@ void MAP::runGame() {
 			}
 		}
 		t++;
-		if (t >= INT_MAX)  //To prevent t from overflow
+		if (t >= INT_MAX)					//To prevent t from overflow
 			t = 0;
 		if (player.checkWin()) {			//If user pass level
 			system("pause");
-			if (game->printCongrat()) {	//Continue playing
+			if (level.passAllLevels()) {	//If player pass all level, return menu.
+				game->printCongrat();
+				system("cls");
+				drawLoadingBar();
+				break;
+			}	
+			if (game->levelUp()) {			//Continue playing
 				subNewGame();
 				levelUp();
 				speed = level.getSpeed();
@@ -257,53 +258,6 @@ void MAP::runGame() {
 		}
 	}
 }
-
-//runGame ver2
-/*
-int MAP::runGame() {
-	int t = 0;
-	char key;
-	int speed = level.getSpeed();
-	int distance = level.getDistance();
-	int lightPhase = level.getLightPhase();
-	int epoch = level.getEpoch();
-	newState();
-	while (!isEnd) {
-		if (!isPause) {
-			rows.newState(t, speed, lightPhase, epoch);
-		}
-		if (_kbhit()) {
-			key = _getch();
-			if (key == 27) {
-				isEnd = true;
-				return 0;
-			}
-			else if (key == 'p' || key == 'P') {
-				isPause = true;
-				int pauseOption = pausePanel();		//Call Pause panel and return option
-				if (pauseOption == 0)
-					isPause = false;
-				else if (pauseOption == 3)
-					return 0;;
-			}
-			else {
-				if (!isPause) updatePlayerPos(key);
-			}
-		}
-		if (checkCrash()) {
-			player.crashEffect();
-			isEnd = true;
-			return 2;
-		}
-		t++;
-		if (t >= INT_MAX)  //To prevent t from overflow
-			t = 0;
-		if (player.checkWin()) {
-			system("pause");
-			return 1;
-		}
-	}
-}*/
 
 void MAP::levelUp() {
 	level.NewLevel();
@@ -333,31 +287,38 @@ bool MAP::checkCrash() {
 
 void MAP::saveGame() {
 	ofstream ofs;
-	
+	string path = "SaveGame/";
+
 	//ghi tên file vô một cái file tổng hợp những file lưu
-	ofs.open("SaveGameFileName.txt", ios::app);
-	if(!ofs.is_open()) {
-		cout << "Cannot create file!\n";
-		return;
-	}
-	ofs << player->getName() << "\n";
-	ofs.close();
-	
-	
-	ofs.open("SaveGame/" + player->getName() + ".txt", ios::binary);
+	ofs.open(path + "SaveGameFileName.txt", ios::app);
 	if (!ofs.is_open()) {
 		cout << "Cannot create file!\n";
+		system("pause");
+		ofs.close();
+		return;
+	}
+	ofs << player.getName() << "\n";
+	ofs.close();
+
+
+	ofs.open(path + player.getName() + ".txt", ios::binary);
+	if (!ofs.is_open()) {
+		cout << "Cannot create file!\n";
+		ofs.close();
+		system("pause");
 		return;
 	}
 	player.savePlayer(ofs);
-	level.saveLevel(ofs);
-	rows.saveRows(ofs);
-	ofs.close();
 }
 
+
 void MAP::loadGame(string fileName) {
-	this->~MAP();
-	new(&map) MAP(game);
+	//this->~MAP();
+	//new(&map) MAP(game);
+
+	rows.~ROWS();
+	new(&rows) ROWS();
+
 	ifstream ifs;
 	ifs.open(fileName, ios::binary);
 	if (!ifs.is_open()) {
