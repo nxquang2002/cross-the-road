@@ -26,6 +26,7 @@ public:
 	int getDistance();
 	int getLightPhase();
 	int getEpoch();
+	bool passAllLevels();
 	void displayLevel();
 	void saveLevel(ofstream& ofs);
 	void loadLevel(ifstream& ifs);

@@ -44,6 +44,10 @@ int LEVEL::getEpoch() {
 	return epoch;
 }
 
+bool LEVEL::passAllLevels() {
+	return nLevel >= 5;
+}
+
 void LEVEL::displayLevel() {
 	cout << "LEVEL: " << nLevel;
 }
