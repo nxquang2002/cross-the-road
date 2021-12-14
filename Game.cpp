@@ -97,13 +97,14 @@ void GAME::newGame() {
 		}
 		else {
 			if (ch == ESC) {
-				system("cls");
+				// back to the previous menu
 				return;
 			}
 			else if (ch == ENTER) {
 				if (tmp.size() > 32)
 					continue;
 				subNewGame();
+				map->setPlayerName(tmp);
 				map->runGame();
 				system("cls");
 				return;
@@ -120,8 +121,8 @@ void GAME::newGame() {
 						cout << "                                                  ";
 						gotoXY(startX + tmp.size(), startY);
 					}
-					gotoXY(startX, startY);
-					cout << tmp;
+					//gotoXY(startX, startY);
+					//cout << tmp;
 					UnNocursortype();
 				}
 			}
@@ -140,122 +141,6 @@ void GAME::newGame() {
 				gotoXY(startX, startY);
 				cout << tmp;
 				UnNocursortype();
-			}
-		}
-	}
-}
-
-void GAME::loadGame() {
-	system("cls");
-	int startX = 82;
-	int startY = 17;
-
-	// load game board
-	TextColor(ColorCode_DarkCyan);
-	gotoXY(startX + 2, startY + 1);
-	cout << "LOAD GAME";
-
-	gotoXY(startX + 1, startY);
-	for (int i = 0; i < 11; ++i) //10 is the size of " NEW GAME "
-		cout << char(205);
-
-	gotoXY(startX + 1, startY + 2);
-	for (int i = 0; i < 11; ++i) //10 is the size of " NEW GAME "
-		cout << char(205);
-
-	gotoXY(startX, startY);
-	cout << char(201);
-	gotoXY(startX, startY + 2);
-	cout << char(200);
-
-	gotoXY(startX + 12, startY); // +11 because " NEW GAME " is 10 and plus 1 more  
-	cout << char(187);
-	gotoXY(startX + 12, startY + 2); // +11 because " NEW GAME " is 10 and plus 1 more
-	cout << char(188);
-
-	gotoXY(startX, startY + 1);
-	cout << char(186);
-	gotoXY(startX + 12, startY + 1);
-	cout << char(186);
-	//
-
-
-	vector<string> fileName;
-	string tmp;
-	ifstream ifs;
-	bool noSaveGame = false;
-	ifs.open("SaveGameFileName.txt");
-	if (!ifs.is_open())
-		noSaveGame = true;
-	while(!ifs.eof()) {
-		getline(ifs, tmp, '\n');
-		if (tmp == "")
-			continue;
-		fileName.push_back(tmp);
-	}
-	ifs.close();
-
-	//print all the names of save game file for user to choose
-	startX = 90;
-	startY = 20;
-	
-	if (noSaveGame) {
-		gotoXY(startX, startY);
-		cout << "No save game!";
-	}
-	else {
-		for (int i = 0; i < fileName.size(); i++) {
-			gotoXY(startX, startY + 2 * i);
-			TextColor(ColorCode_White);
-			cout << fileName[i];
-		}
-	}
-
-	int option = 0;
-	while(true) {
-		if (_kbhit()) {
-			unsigned char key = _getch();
-			if (!noSaveGame && (key == 'W' || key == 'w')) {
-				if (!option)
-					continue;
-				else {
-					//print the old selection back to white
-					gotoXY(startX, startY);
-					TextColor(ColorCode_White);
-					cout << fileName[option];
-					
-					//print the new selection to dark cyan
-					startY -= 2;
-					gotoXY(startX, startY);
-					TextColor(ColorCode_DarkCyan);
-					cout << fileName[--option];
-				}
-			}
-			else if (!noSaveGame && (key == 'S' || key == 's')) {
-				if (option == fileName.size() - 1)
-					continue;
-				else {
-					//print the old selection back to white
-					gotoXY(startX, startY);
-					TextColor(ColorCode_White);
-					cout << fileName[option];
-					
-					//print the new selection to dark cyan
-					startY += 2;
-					gotoXY(startX, startY);
-					TextColor(ColorCode_DarkCyan);
-					cout << fileName[++option];
-				}
-			}
-			else if (!noSaveGame && key == ENTER) {
-				map->loadGame(fileName[option] + ".txt");
-				//
-				//
-				//
-			}
-			else if (key == ESC) {
-				system("cls");
-				return;
 			}
 		}
 	}
@@ -315,7 +200,6 @@ void GAME::menu() {
 			}
 			case 1:
 			{
-				loadGame();
 				break;
 			}
 			case 2:
@@ -335,6 +219,124 @@ void GAME::menu() {
 	}
 }
 
+
+
+void GAME::loadGame() {
+	system("cls");
+	int startX = 82;
+	int startY = 17;
+
+	// load game board
+	TextColor(ColorCode_DarkCyan);
+	gotoXY(startX + 2, startY + 1);
+	cout << "LOAD GAME";
+
+	gotoXY(startX + 1, startY);
+	for (int i = 0; i < 11; ++i) //10 is the size of " NEW GAME "
+		cout << char(205);
+
+	gotoXY(startX + 1, startY + 2);
+	for (int i = 0; i < 11; ++i) //10 is the size of " NEW GAME "
+		cout << char(205);
+
+	gotoXY(startX, startY);
+	cout << char(201);
+	gotoXY(startX, startY + 2);
+	cout << char(200);
+
+	gotoXY(startX + 12, startY); // +11 because " NEW GAME " is 10 and plus 1 more  
+	cout << char(187);
+	gotoXY(startX + 12, startY + 2); // +11 because " NEW GAME " is 10 and plus 1 more
+	cout << char(188);
+
+	gotoXY(startX, startY + 1);
+	cout << char(186);
+	gotoXY(startX + 12, startY + 1);
+	cout << char(186);
+	//
+
+
+	vector<string> fileName;
+	string tmp;
+	ifstream ifs;
+	bool noSaveGame = false;
+	string path = "./SaveGame/";
+	ifs.open(path + "SaveGameFileName.txt");
+	if (!ifs.is_open())
+		noSaveGame = true;
+	while (!ifs.eof()) {
+		getline(ifs, tmp, '\n');
+		if (tmp == "")
+			continue;
+		fileName.push_back(tmp);
+	}
+	ifs.close();
+
+	//print all the names of save game file for user to choose
+	startX = 90;
+	startY = 20;
+
+	if (noSaveGame) {
+		gotoXY(startX, startY);
+		cout << "No save game!";
+	}
+	else {
+		for (int i = 0; i < fileName.size(); i++) {
+			gotoXY(startX, startY + 2 * i);
+			TextColor(ColorCode_White);
+			cout << fileName[i];
+		}
+	}
+
+	int option = 0;
+	while (true) {
+		if (_kbhit()) {
+			unsigned char key = _getch();
+			if (!noSaveGame && (key == 'W' || key == 'w')) {
+				if (!option)
+					continue;
+				else {
+					//print the old selection back to white
+					gotoXY(startX, startY);
+					TextColor(ColorCode_White);
+					cout << fileName[option];
+
+					//print the new selection to dark cyan
+					startY -= 2;
+					gotoXY(startX, startY);
+					TextColor(ColorCode_DarkCyan);
+					cout << fileName[--option];
+				}
+			}
+			else if (!noSaveGame && (key == 'S' || key == 's')) {
+				if (option == fileName.size() - 1)
+					continue;
+				else {
+					//print the old selection back to white
+					gotoXY(startX, startY);
+					TextColor(ColorCode_White);
+					cout << fileName[option];
+
+					//print the new selection to dark cyan
+					startY += 2;
+					gotoXY(startX, startY);
+					TextColor(ColorCode_DarkCyan);
+					cout << fileName[++option];
+				}
+			}
+			else if (!noSaveGame && key == ENTER) {
+				map->loadGame(path + fileName[option] + ".txt");
+				//
+				//
+			}
+			else if (key == ESC) {
+				system("cls");
+				return;
+			}
+		}
+	}
+}
+
 bool GAME::backToMenu() {
 	system("cls");
 	int x = 50, y = 10;
@@ -345,13 +347,14 @@ bool GAME::backToMenu() {
 	"| '_ \\ / _` |/ __| |/ / | __/ _ \\  | '_ ` _ \\ / _ \\ '_ \\| | | |/ / ",
 	"| |_) | (_| | (__|   <  | || (_) | | | | | | |  __/ | | | |_| |_|  ",
 	"|_.__/ \\__,_|\\___|_|\\_\\  \\__\\___/  |_| |_| |_|\\___|_| |_|\\__,_(_)  ",
-	"                                                                    ",
-	"                                                                    " };
-	for (int i = 0; i < 8; i++) {
+	"                                                                    "};
+	drawRecDouble(42, 9, 80, 7);
+	for (int i = 0; i < 7; i++) {
 		gotoXY(x, y++);
 		cout << title[i] << "\n";
 	}
-	x = 75;
+
+	x = 77;
 	y = 20;
 	string prompt[] = { "1. Save Game", "2. Cancel" };
 	const int length = 2;
@@ -432,7 +435,7 @@ int returnChoice(string menu[], const int length, int x, int y) {
 	}
 }
 
-bool GAME::printCongrat() {
+void GAME::printCongrat() {
 	system("cls");
 	int x = 53, y = 10;
 	const string title[8] = {
@@ -451,31 +454,15 @@ bool GAME::printCongrat() {
 	x = 65;
 	y = 20;
 	gotoXY(x, y);
-	cout << "BIN! BIN! BIN! YOU HAVE PASS THE LEVEL!\n";
+	cout << "GOOD GAME! YOU ARE THE BEST ROAD CROSSER!\n";
 	gotoXY(x + 12, y + 2);
-	cout << "KEEP GOING?";
+	cout << "BACK TO MENU?";
 	x = 80;
 	y = 24;
-	string prompt[] = { "1. Yes", "2. No" };
+	string prompt[] = { "1. Yes", "2. Also yes" };
 	const int length = 2;
-	int choice = 0;
-	while (true) {
-		choice = returnChoice(prompt, length, x, y);
-		switch (choice)
-		{
-		case 0:
-		{
-			return true;
-			break;
-		}
-		case 1:
-		{
-			return false;
-			break;
-		}
-		}
-		break;
-	}
+	int choice = returnChoice(prompt, 2, x, y);
+	return;
 }
 
 bool GAME::printLose() {
@@ -524,8 +511,9 @@ bool GAME::printLose() {
 	}
 }
 
-void GAME::levelUp() {
-	int x = 65, y = 10;
+bool GAME::levelUp() {
+	system("cls");
+	int x = 68, y = 10;
 	const string title[8] = {
 	" _                _               ",
 	"| |              | |              ",
@@ -535,16 +523,19 @@ void GAME::levelUp() {
 	"|_|\\___| \\_/ \\___|_|  \\__,_| .__/ ",
 	"                           | |    ",
 	"                           |_|    " };
+	drawRecDouble(64, 9, 40, 8);
 	for (int i = 0; i < 8; i++) {
 		gotoXY(x, y++);
 		cout << title[i] << "\n";
 	}
-	x = 73;
-	y = 18;
-	gotoXY(x, y);
-	cout << "Wanna continue?\n";
-	x = 77;
+	x = 65;
 	y = 20;
+	gotoXY(x, y);
+	cout << "BIN! BIN! BIN! YOU HAVE PASSED THE LEVEL!\n";
+	gotoXY(x + 14, y + 2);
+	cout << "KEEP GOING?";
+	x = 81;
+	y = 24;
 	string prompt[] = { "1. Yes", "2. No" };
 	const int length = 2;
 	int choice = 0;
@@ -553,16 +544,11 @@ void GAME::levelUp() {
 		switch (choice)
 		{
 		case 0:
-		{
-			system("cls");
+			return true;
 			break;
-		}
 		case 1:
-		{
-			system("cls");
-			saveGameMenu();
+			return false;
 			break;
-		}
 		}
 		break;
 	}
@@ -570,7 +556,7 @@ void GAME::levelUp() {
 
 bool GAME::saveGameMenu() {
 	system("cls");
-	int x = 35, y = 10;
+	int x = 40, y = 10;
 	const string title[8] = {
 	"                     _     _                                                          ___  ",
 	"                    | |   | |                                                        |__ \\ ",
@@ -584,7 +570,7 @@ bool GAME::saveGameMenu() {
 		gotoXY(x, y++);
 		cout << title[i] << "\n";
 	}
-	x = 75;
+	x = 80;
 	y = 20;
 	string prompt[] = { "1. Yes", "2. No" };
 	const int length = 2;
@@ -830,10 +816,6 @@ void drawRecDouble(int ox, int oy, short width, short height) {
 		cout << (char)205;
 	}
 	cout << (char)188;
-}
-
-string GAME::getName() {
-	return gameName;
 }
 
 
