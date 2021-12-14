@@ -39,7 +39,7 @@ void PLAYER::moveRight() {
 }
 
 bool PLAYER::checkWin() {
-	int bot = (pos.getY() + height)/5 - 1;
+	int bot = (pos.getY() + height) / 5 - 1;
 	if (bot < 0) {
 		isWin = true;
 		return true;
@@ -137,13 +137,13 @@ void PLAYER::getCurrentRows(vector<int>& rows) {
 	int bot = pos.getY() + height;
 	int r1 = top / 5 - 1;
 	int r2 = bot / 5 - 1;
-	if ((r1 >= 5 && r2 >= 5) || (r1 < 0 && r2 <  0))
+	if ((r1 >= 5 && r2 >= 5) || (r1 < 0 && r2 < 0))
 		return;
 	if (r1 == r2)
 		rows.push_back(r1);
 	else {
-		if(r1 >= 0 && r1 < 5) rows.push_back(r1);
-		if(r2 >= 0 && r2 < 5) rows.push_back(r2);
+		if (r1 >= 0 && r1 < 5) rows.push_back(r1);
+		if (r2 >= 0 && r2 < 5) rows.push_back(r2);
 	}
 }
 
@@ -196,4 +196,12 @@ void PLAYER::loadPlayer(ifstream& ifs) {
 	ifs.read((char*)&pos, sizeof(POSITION));
 	ifs.read((char*)&isDead, sizeof(bool));
 	ifs.read((char*)&isWin, sizeof(bool));
+}
+
+string PLAYER::getName() {
+	return name;
+}
+
+void PLAYER::setName(string s) {
+	name = s;
 }

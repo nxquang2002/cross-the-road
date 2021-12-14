@@ -18,6 +18,7 @@ private:
 	bool isWin;
 	const int width = 1;
 	const int height = 1;
+	string name;	//For saving game
 public:
 	PLAYER(POSITION position, bool dead = false, bool win = false);
 	void moveLeft();
@@ -31,11 +32,13 @@ public:
 	bool checkCrash(vector<ENEMY*> enemy);
 	void crashEffect();
 	void drawEffect(char** shape, int width, int height);
-	void getCurrentRows(vector<int> &rows); //Get rows index, where player are standing
+	void getCurrentRows(vector<int>& rows); //Get rows index, where player are standing
 	bool checkWin();
 	void setPosition(int x, int y);
 	void savePlayer(ofstream& ofs);
-	void loadPlayer(ifstream& ifs);
+	void loadPlayer(ifstream& ifs);;
+	string getName();
+	void setName(string s);
 };
 
 #endif // !_PLAYER_H_
