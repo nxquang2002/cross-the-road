@@ -45,7 +45,7 @@ public:
 	int pausePanel();
 	void hidePausePanel(string option[], int length, int x, int y);
 	void saveGame();
-	void loadGame();
+	void loadGame(string fileName);
 	void levelUp();
 	void replay();	//Lose and return to level 1
 };

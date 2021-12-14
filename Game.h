@@ -23,6 +23,7 @@ public:
 	GAME();
 	~GAME();
 	void newGame();
+	void loadGame();
 	void menu();
 	void title();
 	void levelUp();
@@ -31,6 +32,7 @@ public:
 	bool printLose();
 	bool saveGameMenu();
 	bool backToMenu();
+	string getName();
 private:
 	MAP *map;
 	string gameName;

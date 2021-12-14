@@ -97,7 +97,7 @@ void GAME::newGame() {
 		}
 		else {
 			if (ch == ESC) {
-				// back to the previous menu
+				system("cls");
 				return;
 			}
 			else if (ch == ENTER) {
@@ -140,6 +140,122 @@ void GAME::newGame() {
 				gotoXY(startX, startY);
 				cout << tmp;
 				UnNocursortype();
+			}
+		}
+	}
+}
+
+void GAME::loadGame() {
+	system("cls");
+	int startX = 82;
+	int startY = 17;
+
+	// load game board
+	TextColor(ColorCode_DarkCyan);
+	gotoXY(startX + 2, startY + 1);
+	cout << "LOAD GAME";
+
+	gotoXY(startX + 1, startY);
+	for (int i = 0; i < 11; ++i) //10 is the size of " NEW GAME "
+		cout << char(205);
+
+	gotoXY(startX + 1, startY + 2);
+	for (int i = 0; i < 11; ++i) //10 is the size of " NEW GAME "
+		cout << char(205);
+
+	gotoXY(startX, startY);
+	cout << char(201);
+	gotoXY(startX, startY + 2);
+	cout << char(200);
+
+	gotoXY(startX + 12, startY); // +11 because " NEW GAME " is 10 and plus 1 more  
+	cout << char(187);
+	gotoXY(startX + 12, startY + 2); // +11 because " NEW GAME " is 10 and plus 1 more
+	cout << char(188);
+
+	gotoXY(startX, startY + 1);
+	cout << char(186);
+	gotoXY(startX + 12, startY + 1);
+	cout << char(186);
+	//
+
+
+	vector<string> fileName;
+	string tmp;
+	ifstream ifs;
+	bool noSaveGame = false;
+	ifs.open("SaveGameFileName.txt");
+	if (!ifs.is_open())
+		noSaveGame = true;
+	while(!ifs.eof()) {
+		getline(ifs, tmp, '\n');
+		if (tmp == "")
+			continue;
+		fileName.push_back(tmp);
+	}
+	ifs.close();
+
+	//print all the names of save game file for user to choose
+	startX = 90;
+	startY = 20;
+	
+	if (noSaveGame) {
+		gotoXY(startX, startY);
+		cout << "No save game!";
+	}
+	else {
+		for (int i = 0; i < fileName.size(); i++) {
+			gotoXY(startX, startY + 2 * i);
+			TextColor(ColorCode_White);
+			cout << fileName[i];
+		}
+	}
+
+	int option = 0;
+	while(true) {
+		if (_kbhit()) {
+			unsigned char key = _getch();
+			if (!noSaveGame && (key == 'W' || key == 'w')) {
+				if (!option)
+					continue;
+				else {
+					//print the old selection back to white
+					gotoXY(startX, startY);
+					TextColor(ColorCode_White);
+					cout << fileName[option];
+					
+					//print the new selection to dark cyan
+					startY -= 2;
+					gotoXY(startX, startY);
+					TextColor(ColorCode_DarkCyan);
+					cout << fileName[--option];
+				}
+			}
+			else if (!noSaveGame && (key == 'S' || key == 's')) {
+				if (option == fileName.size() - 1)
+					continue;
+				else {
+					//print the old selection back to white
+					gotoXY(startX, startY);
+					TextColor(ColorCode_White);
+					cout << fileName[option];
+					
+					//print the new selection to dark cyan
+					startY += 2;
+					gotoXY(startX, startY);
+					TextColor(ColorCode_DarkCyan);
+					cout << fileName[++option];
+				}
+			}
+			else if (!noSaveGame && key == ENTER) {
+				map->loadGame(fileName[option] + ".txt");
+				//
+				//
+				//
+			}
+			else if (key == ESC) {
+				system("cls");
+				return;
 			}
 		}
 	}
@@ -199,6 +315,7 @@ void GAME::menu() {
 			}
 			case 1:
 			{
+				loadGame();
 				break;
 			}
 			case 2:
@@ -713,6 +830,10 @@ void drawRecDouble(int ox, int oy, short width, short height) {
 		cout << (char)205;
 	}
 	cout << (char)188;
+}
+
+string GAME::getName() {
+	return gameName;
 }
 
 

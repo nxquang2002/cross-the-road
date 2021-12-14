@@ -333,8 +333,18 @@ bool MAP::checkCrash() {
 
 void MAP::saveGame() {
 	ofstream ofs;
-	string fileName = "Temporary Name"; //temp
-	ofs.open(fileName, ios::binary);
+	
+	//ghi tên file vô một cái file tổng hợp những file lưu
+	ofs.open("SaveGameFileName.txt", ios::app);
+	if(!ofs.is_open()) {
+		cout << "Cannot create file!\n";
+		return;
+	}
+	ofs << player->getName() << "\n";
+	ofs.close();
+	
+	
+	ofs.open("SaveGame/" + player->getName() + ".txt", ios::binary);
 	if (!ofs.is_open()) {
 		cout << "Cannot create file!\n";
 		return;
@@ -345,9 +355,10 @@ void MAP::saveGame() {
 	ofs.close();
 }
 
-void MAP::loadGame() {
+void MAP::loadGame(string fileName) {
+	this->~MAP();
+	new(&map) MAP(game);
 	ifstream ifs;
-	string fileName = "Temporary Name"; //temp
 	ifs.open(fileName, ios::binary);
 	if (!ifs.is_open()) {
 		cout << "Cannot open file!\n";
@@ -356,5 +367,6 @@ void MAP::loadGame() {
 	player.loadPlayer(ifs);
 	level.loadLevel(ifs);
 	rows.loadRows(ifs, level);
+	ifs.close();
 }
 
