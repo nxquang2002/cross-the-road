@@ -105,7 +105,11 @@ bool PLAYER::isCollide(ENEMY* currentEnemy) {
 bool PLAYER::checkCrash(vector<ENEMY*> enemy) {
 	int posX = pos.getX(), posY = pos.getY();
 	for (int i = 0; i < enemy.size(); i++) {
-		if (isCollide(enemy[i])) return true;
+		if (isCollide(enemy[i])) 
+		{
+			enemy[i]->enemySound(isMute);
+			return true;
+		}
 	}
 	return false;
 }
@@ -204,4 +208,8 @@ string PLAYER::getName() {
 
 void PLAYER::setName(string s) {
 	name = s;
+}
+void PLAYER::setMute(bool mute)
+{
+	isMute = mute;
 }

@@ -19,6 +19,7 @@ private:
 	const int width = 1;
 	const int height = 1;
 	string name;	//For saving game
+	bool isMute;	//For ON/OFF sound
 public:
 	PLAYER(POSITION position, bool dead = false, bool win = false);
 	void moveLeft();
@@ -39,6 +40,7 @@ public:
 	void loadPlayer(ifstream& ifs);;
 	string getName();
 	void setName(string s);
+	void setMute(bool mute);
 };
 
 #endif // !_PLAYER_H_

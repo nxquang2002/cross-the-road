@@ -1,7 +1,7 @@
 #include "Map.h"
 
 
-MAP::MAP(GAME *gm) : width(120), height(35), isPause(0), isEnd(0), player(POSITION(50, 33)), level(LEVEL(1)), game(gm) {
+MAP::MAP(GAME* gm) : width(120), height(35), isPause(0), isEnd(0), player(POSITION(50, 33)), level(LEVEL(1)), game(gm) {
 	for (int i = 0; i <= width; ++i) {
 		map[0][i] = map[height][i] = '-';
 	}
@@ -121,7 +121,7 @@ void MAP::setPlayerName(string s) {
 void MAP::loadState() {
 	system("cls");
 	player.deleteOldPlayer();
-	
+
 	drawMap();
 	drawPlayer();
 }
@@ -147,7 +147,7 @@ int MAP::pausePanel() {
 }
 void MAP::hidePausePanel(string option[], int length, int x, int y) {
 	for (int i = 0; i < length; ++i) {
-		gotoXY(x, y + 2*i);
+		gotoXY(x, y + 2 * i);
 		for (int j = 0; j < option[i].length(); ++j)
 			cout << " ";
 	}
@@ -165,6 +165,7 @@ void MAP::runGame() {
 	int distance = level.getDistance();
 	int lightPhase = level.getLightPhase();
 	int epoch = level.getEpoch();
+	gameSound(isMute);			// start sound when game run
 	newState();
 	while (!isEnd) {
 		if (!isPause) {
@@ -198,7 +199,7 @@ void MAP::runGame() {
 					system("cls");
 					saveGame();
 					drawLoadingBar();
-				} 
+				}
 				continueGame();
 			}
 			else if (key == 't' || key == 'T') {
@@ -218,6 +219,7 @@ void MAP::runGame() {
 			if (game->printLose()) {
 				//Lose and start a new game
 				subNewGame();
+				gameSound(isMute);				// restart sound when replay
 				replay();	//return to level 1
 				speed = level.getSpeed();
 				distance = level.getDistance();
@@ -240,9 +242,10 @@ void MAP::runGame() {
 				system("cls");
 				drawLoadingBar();
 				break;
-			}	
+			}
 			if (game->levelUp()) {			//Continue playing
 				subNewGame();
+				gameSound(isMute);			// restart sound when new level
 				levelUp();
 				speed = level.getSpeed();
 				distance = level.getDistance();
@@ -254,7 +257,7 @@ void MAP::runGame() {
 				drawLoadingBar();
 				break;
 			}
-			
+
 		}
 	}
 }
@@ -330,4 +333,8 @@ void MAP::loadGame(string fileName) {
 	rows.loadRows(ifs, level);
 	ifs.close();
 }
-
+void MAP::setMute(bool mute)
+{
+	isMute = mute;
+	player.setMute(mute);
+}
