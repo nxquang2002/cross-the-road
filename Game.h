@@ -23,16 +23,16 @@ public:
 	GAME();
 	~GAME();
 	void newGame();
-	void loadGame();
+	void loadGame(); 
+	void loadGameMenu();
 	void menu();
 	void title();
-	void levelUp();
+	bool levelUp();
 	void setting();
-	bool printCongrat();
+	void printCongrat();
 	bool printLose();
 	bool saveGameMenu();
 	bool backToMenu();
-	string getName();
 private:
 	MAP *map;
 	string gameName;

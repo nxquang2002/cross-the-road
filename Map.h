@@ -39,6 +39,7 @@ public:
 	void drawPlayer();
 	void updatePlayerPos(char key);
 	void newState();
+	void loadState();	//After call loadGame(), loadState() for showing stuffs to map.
 	bool checkCrash();
 	void runGame();		//Most important function.
 	void continueGame();
@@ -48,6 +49,7 @@ public:
 	void loadGame(string fileName);
 	void levelUp();
 	void replay();	//Lose and return to level 1
+	void setPlayerName(string s);
 };
 
 #endif // !_MAP_H_
