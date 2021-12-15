@@ -22,6 +22,7 @@ class GAME;
 
 class MAP {
 private:
+	bool isMute;
 	int width, height;
 	char map[36][125];
 	bool isPause;
@@ -50,6 +51,7 @@ public:
 	void levelUp();
 	void replay();	//Lose and return to level 1
 	void setPlayerName(string s);
+	void setMute(bool mute);
 };
 
 #endif // !_MAP_H_

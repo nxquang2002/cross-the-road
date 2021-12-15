@@ -27,12 +27,12 @@ public:
     void setSpeed(int spd);
     void drawShape();
     POSITION getPos();
-    void sound();
     bool isOutOfMap();
     bool move();
     void deleteOldEnemy();
     void saveEnemy(ofstream& ofs);
     ~ENEMY();
+    virtual void enemySound(bool mute) = 0;
 };
 
 class Car : public ENEMY {
@@ -40,6 +40,7 @@ public:
     Car();
     Car(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
+    void enemySound(bool mute);
 };
 
 class Truck : public ENEMY {
@@ -47,6 +48,7 @@ public:
     Truck();
     Truck(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
+    void enemySound(bool mute);
 };
 
 class Bird : public ENEMY {
@@ -54,6 +56,7 @@ public:
     Bird();
     Bird(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
+    void enemySound(bool mute);
 };
 
 class Dinosaur : public ENEMY {
@@ -61,6 +64,7 @@ public:
     Dinosaur();
     Dinosaur(POSITION pos, bool dirRight, int spd);
     string getShapeFile();
+    void enemySound(bool mute);
 };
 
 #endif // !_ENEMY_H_

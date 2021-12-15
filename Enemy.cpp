@@ -15,7 +15,7 @@ ENEMY::ENEMY(POSITION pos, bool right, int spd) {
     this->speed = spd;
     this->shape = nullptr;
     this->isOutMap = true;
-    this->dirRight = right;   
+    this->dirRight = right;
 }
 
 int ENEMY::getWidth() {
@@ -91,12 +91,6 @@ POSITION ENEMY::getPos() {
     return pos;
 }
 
-void ENEMY::sound() {
-
-    //implement
-
-    return;
-}
 
 bool ENEMY::isOutOfMap() {
     if (pos.getX() + width < SCREEN_LEFT || pos.getX() - width > SCREEN_RIGHT)
@@ -158,7 +152,15 @@ string Car::getShapeFile() {
         return "car1.txt";
     return "car.txt";
 }
-
+void Car::enemySound(bool mute)
+{
+    if (mute)
+        PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
+    else
+    {
+        PlaySound(TEXT("carCrash.wav"), NULL, SND_FILENAME | SND_ASYNC);
+    }
+}
 Truck::Truck() : ENEMY() {}
 
 Truck::Truck(POSITION pos, bool dirRight, int spd) : ENEMY(pos, dirRight, spd) {}
@@ -167,6 +169,15 @@ string Truck::getShapeFile() {
     if (dirRight)
         return "truck1.txt";
     return "truck.txt";
+}
+void Truck::enemySound(bool mute)
+{
+    if (mute)
+        PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
+    else
+    {
+        PlaySound(TEXT("carCrash.wav"), NULL, SND_FILENAME | SND_ASYNC);
+    }
 }
 
 Bird::Bird() : ENEMY() {}
@@ -178,6 +189,15 @@ string Bird::getShapeFile() {
         return "bird1.txt";
     return "bird.txt";
 }
+void Bird::enemySound(bool mute)
+{
+    if (mute)
+        PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
+    else
+    {
+        PlaySound(TEXT("birdSound.wav"), NULL, SND_FILENAME | SND_ASYNC);
+    }
+}
 
 Dinosaur::Dinosaur() : ENEMY() {}
 
@@ -188,9 +208,18 @@ string Dinosaur::getShapeFile() {
         return "dino1.txt";
     return "dino.txt";
 }
+void Dinosaur::enemySound(bool mute)
+{
+    if (mute)
+        PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
+    else
+    {
+        PlaySound(TEXT("dinoSound.wav"), NULL, SND_FILENAME | SND_ASYNC);
+    }
+}
 
 void ENEMY::saveEnemy(ofstream& ofs) {
     ofs.write((char*)&pos, sizeof(POSITION));
-     ofs.write((char*)&width, sizeof(int));
+    ofs.write((char*)&width, sizeof(int));
 }
 
