@@ -23,8 +23,8 @@ public:
 	GAME();
 	~GAME();
 	void newGame();
-	void loadGame(); 
-	void loadGameMenu();
+	void loadGame();
+	void loadGameMenu(vector<string>& fileName, bool& noSaveGame, int& startX, int& startY, string& path, int& option, int& maxFile);
 	void menu();
 	void title();
 	bool levelUp();
@@ -34,7 +34,7 @@ public:
 	bool saveGameMenu();
 	bool backToMenu();
 private:
-	MAP *map;
+	MAP* map;
 	string gameName;
 };
 
