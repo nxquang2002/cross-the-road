@@ -30,11 +30,11 @@ public:
 	void title();
 	bool levelUp();
 	void setting();
-	void setting2();			// add sound to setting
+	//void setting2();			// add sound to setting
 	void printCongrat();
 	bool printLose();
 	bool saveGameMenu();
-	bool backToMenu();
+	int backToMenu();
 private:
 	MAP* map;
 	string gameName;
@@ -47,7 +47,7 @@ void drawInputNameBar();
 int returnChoice(string menu[], const int length, int x, int y);
 
 // mute ON/OFF soundwhe choice
-int returnChoice2(bool mute, string menu[], const int length, int x, int y);	
+int returnChoice2(bool mute, string menu[], const int length, int x, int y);
 
 void drawRecSingle(int ox, int oy, short width, short height);
 void drawRecDouble(int ox, int oy, short width, short height);

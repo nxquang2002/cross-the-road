@@ -8,6 +8,8 @@ GAME::~GAME() {
 	delete map;
 }
 
+//setting ver1
+/*
 void GAME::setting() {
 	system("cls");
 	string opt[2] = { "1. Sound:", "2. Back to menu" };
@@ -70,32 +72,35 @@ void GAME::setting() {
 	}
 
 }
-void GAME::setting2()
+*/
+void GAME::setting()
 {
 	system("cls");
 	string opt[2] = { "1. Sound:", "2. Back to menu" };
 	string sound[2] = { " << ON >>", " << OFF >>" };
 	int option = 0;
 	char key;
+
+	drawRecDouble(83, 15, 11, 1);
 	gotoXY(85, 16);
 	cout << "SETTINGS";
-	gotoXY(80, 18);
+	gotoXY(80, 19);
 	TextColor(11);
 	cout << opt[0] + sound[isMute];
 	TextColor(15);
-	gotoXY(80, 20);
+	gotoXY(80, 21);
 	cout << opt[1];
 
 	while (true) {
 		if (_kbhit) {
 			key = _getch();
 			if (key == 'W' || key == 'w' || key == 72) {
-				gotoXY(80, 18 + option * 2);
+				gotoXY(80, 19 + option * 2);
 				cout << opt[option];
 				if (option == 0) cout << sound[isMute];
 				option--;
 				if (option < 0) option = 1;
-				gotoXY(80, 18 + option * 2);
+				gotoXY(80, 19 + option * 2);
 				TextColor(11);
 				cout << opt[option];
 				if (option == 0) cout << sound[isMute];
@@ -103,12 +108,12 @@ void GAME::setting2()
 				TextColor(15);
 			}
 			else if (key == 'S' || key == 's' || key == 80) {
-				gotoXY(80, 18 + option * 2);
+				gotoXY(80, 19 + option * 2);
 				cout << opt[option];
 				if (option == 0) cout << sound[isMute];
 				option++;
 				if (option > 1) option = 0;
-				gotoXY(80, 18 + option * 2);
+				gotoXY(80, 19 + option * 2);
 				TextColor(11);
 				cout << opt[option];
 				if (option == 0) cout << sound[isMute];
@@ -120,10 +125,10 @@ void GAME::setting2()
 					continue;
 				isMute = !isMute;
 				map->setMute(isMute);
-				gotoXY(89, 18);
+				gotoXY(89, 19);
 				cout << "            ";
 				TextColor(11);
-				gotoXY(89, 18);
+				gotoXY(89, 19);
 				cout << sound[isMute];
 				TextColor(15);
 				chooseSound(false);
@@ -264,8 +269,7 @@ void GAME::menu() {
 			}
 			case 2:
 			{
-				//setting();
-				setting2();
+				setting();
 				title();
 				break;
 			}
@@ -417,8 +421,7 @@ void GAME::loadGame() {
 			}
 			else if (!noSaveGame && key == ENTER) {
 				map->loadGame(path + fileName[option] + ".txt");
-				//
-				//
+				return; 
 			}
 			else if (key == ESC) {
 				system("cls");
@@ -428,7 +431,7 @@ void GAME::loadGame() {
 	}
 }
 
-bool GAME::backToMenu() {
+int GAME::backToMenu() {
 	system("cls");
 	int x = 50, y = 10;
 	const string title[8] = {
@@ -445,28 +448,29 @@ bool GAME::backToMenu() {
 		cout << title[i] << "\n";
 	}
 
-	x = 77;
+	x = 74;
 	y = 20;
-	string prompt[] = { "1. Save Game", "2. Cancel" };
-	const int length = 2;
+	string prompt[] = { "1. Back and save", "2. Back without save", "3. Cancel" };
+	const int length = 3;
 	int choice = 0;
 	while (true) {
 		choice = returnChoice(prompt, length, x, y);
 		switch (choice)
 		{
 		case 0:
-		{
+			//Back and save
 			system("cls");
 			saveGameMenu();
-			return true;
+			return 0;
 			break;
-		}
 		case 1:
-		{
-			//cancel
-			return false;
+			//Back without save
+			return 1;
 			break;
-		}
+		case 2:
+			//Cancel
+			return 2;
+			break;
 		}
 		break;
 	}
@@ -525,6 +529,7 @@ int returnChoice(string menu[], const int length, int x, int y) {
 		}
 	}
 }
+
 int returnChoice2(bool mute, string menu[], const int length, int x, int y)
 {
 	int choice = 0;
@@ -727,7 +732,7 @@ bool GAME::saveGameMenu() {
 	int choice = 0;
 	while (true) {
 		//choice = returnChoice(prompt, length, x, y);
-		choice = returnChoice2(isMute,prompt, length, x, y);
+		choice = returnChoice2(isMute, prompt, length, x, y);
 		switch (choice)
 		{
 		case 0:
@@ -968,6 +973,7 @@ void drawRecDouble(int ox, int oy, short width, short height) {
 	}
 	cout << (char)188;
 }
+
 void gameSound(bool mute)
 {
 	if (mute)
@@ -975,6 +981,7 @@ void gameSound(bool mute)
 	else
 		PlaySound(TEXT("soundTrack.wav"), NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
 }
+
 void clickSound(bool mute)
 {
 	if (mute)
@@ -984,6 +991,7 @@ void clickSound(bool mute)
 		PlaySound(TEXT("click.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	}
 }
+
 void chooseSound(bool mute)
 {
 	if (mute)
@@ -993,6 +1001,7 @@ void chooseSound(bool mute)
 		PlaySound(TEXT("choose.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	}
 }
+
 void keyboardSound(bool mute)
 {
 	if (mute)
