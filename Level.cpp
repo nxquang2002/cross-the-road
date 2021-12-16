@@ -54,16 +54,12 @@ void LEVEL::displayLevel() {
 
 void LEVEL::saveLevel(ofstream& ofs) {
 	ofs.write((char*)&nLevel, sizeof(int));
-	ofs.write((char*)&speed, sizeof(int));
-	ofs.write((char*)&distance, sizeof(int));
-	ofs.write((char*)&lightPhase, sizeof(int));
-	ofs.write((char*)&epoch, sizeof(int));
 }
 
 void LEVEL::loadLevel(ifstream& ifs) {
 	ifs.read((char*)&nLevel, sizeof(int));
-	ifs.read((char*)&speed, sizeof(int));
-	ifs.read((char*)&distance, sizeof(int));
-	ifs.read((char*)&lightPhase, sizeof(int));
-	ifs.read((char*)&epoch, sizeof(int));
+	speed = MIN_SPEED + (nLevel - 1);					//a little hardcode
+	distance = MAX_DISTANCE - (nLevel - 1);
+	lightPhase = MAX_LIGHTPHASE - (nLevel - 1) * 5000;
+	epoch = MAX_EPOCH * pow(0.8, nLevel - 1);
 }
