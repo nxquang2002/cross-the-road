@@ -151,8 +151,7 @@ void GAME::newGame() {
 	//new(&map) MAP(this);
 
 	subNewGame();
-	map->runGame();
-	system("cls");
+	map->runGame(false);
 }
 
 void GAME::title() {
@@ -185,35 +184,31 @@ void GAME::menu() {
 	string prompt[] = { "1. New game", "2. Load game", "3. Settings", "4. Exit" };
 	const int length = 4;
 	int choice = 0;
+	//gameSound(isMute); 
 	while (true) {
-		//choice = returnChoice(prompt, length, x, y);
-		choice = returnChoice2(isMute, prompt, length, x, y);
+		gameSound(isMute);
+		choice = returnChoice(prompt, length, x, y);
+		//choice = returnChoice2(isMute, prompt, length, x, y);
 		while (true)
 		{
 			switch (choice)
 			{
 			case 0:
-			{
 				newGame();
 				title();
 				break;
-			}
 			case 1:
-			{
+				loadGame();
+				map->runGame(true);
+				title();
 				break;
-			}
 			case 2:
-			{
 				setting();
 				title();
 				break;
-			}
 			case 3:
-			{
 				system("cls");
-				exit(1);
-				break;
-			}
+				return;
 			}
 			break;
 		}
@@ -356,8 +351,11 @@ void GAME::loadGame() {
 				}
 			}
 			else if (!noSaveGame && key == ENTER) {
+				map->setPlayerName(fileName[option]);
 				map->loadGame(path + fileName[option] + ".dat");
-				return; 
+				system("cls");
+				subNewGame();
+				return;
 			}
 			else if (key == ESC) {
 				system("cls");
@@ -395,8 +393,6 @@ int GAME::backToMenu() {
 		{
 		case 0:
 			//Back and save
-			system("cls");
-			saveGameMenu();
 			return 0;
 			break;
 		case 1:
@@ -752,7 +748,8 @@ bool GAME::saveGameMenu() {
 		{
 		case 0:
 		{
-			inputSaveGameName();
+			if(!map->isSavedBefore())
+				inputSaveGameName();
 			//save game function
 			return true;
 			break;
@@ -766,49 +763,6 @@ bool GAME::saveGameMenu() {
 		break;
 	}
 }
-
-/*
-bool GAME::backToMenu() {
-	int x = 50, y = 10;
-	const string title[8] = {
-	" _                _      _                                    ___  ",
-	"| |              | |    | |                                  |__ \\ ",
-	"| |__   __ _  ___| | __ | |_ ___    _ __ ___   ___ _ __  _   _  ) |",
-	"| '_ \\ / _` |/ __| |/ / | __/ _ \\  | '_ ` _ \\ / _ \\ '_ \\| | | |/ / ",
-	"| |_) | (_| | (__|   <  | || (_) | | | | | | |  __/ | | | |_| |_|  ",
-	"|_.__/ \\__,_|\\___|_|\\_\\  \\__\\___/  |_| |_| |_|\\___|_| |_|\\__,_(_)  ",
-	"                                                                    ",
-	"                                                                    " };
-	for (int i = 0; i < 8; i++) {
-		gotoXY(x, y++);
-		cout << title[i] << "\n";
-	}
-	x = 75;
-	y = 20;
-	string prompt[] = { "1. Save Game", "2. Cancel" };
-	const int length = 2;
-	int choice = 0;
-	while (true) {
-		choice = returnChoice(prompt, length, x, y);
-		switch (choice)
-		{
-		case 0:
-		{
-			system("cls");
-			saveGameMenu();
-			return true;
-			break;
-		}
-		case 1:
-		{
-			//cancel
-			return false;
-			break;
-		}
-		}
-		break;
-	}
-}*/
 
 void drawLoadingBar() {
 	int startX = 55;
@@ -860,7 +814,7 @@ void subNewGame() {
 	int startY = 20;
 	clock_t begin, end;
 	begin = clock();
-
+	 
 	/*
 		do something here
 	*/
@@ -872,6 +826,7 @@ void subNewGame() {
 	gotoXY(startX + 13, startY);
 	cout << "Loading time: " << (float)(end - begin) / CLOCKS_PER_SEC << "s";
 	gotoXY(startX + 13, startY + 2);
+	gameSound(false);					//Turn off music before game
 	cout << "Press any key to continue...";
 	_getch();
 }
