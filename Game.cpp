@@ -146,78 +146,13 @@ void GAME::setting()
 
 void GAME::newGame() {
 	system("cls");
-	Nocursortype();
-	TextColor(ColorCode_White);
-
-	drawInputNameBar();
-
-	bool notiFlag = 0;
-	string tmp = "";
-	int startX = 56;
-	int startY = 21;
-
-	UnNocursortype();
-	gotoXY(startX, startY);
 
 	//map->~MAP();			//new game, map is reset
 	//new(&map) MAP(this);
 
-	while (true) {
-		unsigned char ch = _getch();
-		if (ch == 0 || ch == 224) {
-			_getch();
-			continue;
-		}
-		else {
-			if (ch == ESC) {
-				// back to the previous menu
-				return;
-			}
-			else if (ch == ENTER) {
-				if (tmp.size() > 32)
-					continue;
-				subNewGame();
-				map->setPlayerName(tmp);
-				map->runGame();
-				system("cls");
-				return;
-			}
-			else if (ch == BACKSPACE) {
-				if (!tmp.empty()) {
-					Nocursortype();
-					tmp.pop_back();
-					gotoXY(startX, startY);
-					cout << "                                                                                 ";
-					if (tmp.size() <= 32 && notiFlag) {
-						notiFlag = false;
-						gotoXY(startX - 17, startY + 2);
-						cout << "                                                  ";
-						gotoXY(startX + tmp.size(), startY);
-					}
-					//gotoXY(startX, startY);
-					//cout << tmp;
-					UnNocursortype();
-				}
-			}
-			else {
-				if (tmp.size() == 81) //input name bar bounding box
-					continue;
-				Nocursortype();
-				tmp.push_back(ch);
-				if (tmp.size() > 32 && !notiFlag) {
-					notiFlag = true;
-					TextColor(ColorCode_DarkRed);
-					gotoXY(startX - 17, startY + 2);
-					cout << "Your name must be between 0 and 32 characters long";
-					TextColor(ColorCode_White);
-				}
-				gotoXY(startX, startY);
-				cout << tmp;
-				UnNocursortype();
-			}
-		}
-		//keyboardSound(isMute);			//sound when type by keyboard
-	}
+	subNewGame();
+	map->runGame();
+	system("cls");
 }
 
 void GAME::title() {
@@ -709,6 +644,76 @@ bool GAME::levelUp() {
 	}
 }
 
+void GAME::inputSaveGameName() {
+	Nocursortype();
+	TextColor(ColorCode_White);
+
+	drawInputNameBar();
+
+	bool notiFlag = 0;
+	string tmp = "";
+	int startX = 56;
+	int startY = 21;
+
+	UnNocursortype();
+	gotoXY(startX, startY);
+
+	while (true) {
+		unsigned char ch = _getch();
+		if (ch == 0 || ch == 224) {
+			_getch();
+			continue;
+		}
+		else {
+			if (ch == ESC) {
+				// back to the previous menu
+				return;
+			}
+			else if (ch == ENTER) {
+				if (tmp.size() > 32)
+					continue;
+				map->setPlayerName(tmp);
+				system("cls");
+				return;
+			}
+			else if (ch == BACKSPACE) {
+				if (!tmp.empty()) {
+					Nocursortype();
+					tmp.pop_back();
+					gotoXY(startX, startY);
+					cout << "                                                                                 ";
+					if (tmp.size() <= 32 && notiFlag) {
+						notiFlag = false;
+						gotoXY(startX - 17, startY + 2);
+						cout << "                                                  ";
+						gotoXY(startX + tmp.size(), startY);
+					}
+					//gotoXY(startX, startY);
+					//cout << tmp;
+					UnNocursortype();
+				}
+			}
+			else {
+				if (tmp.size() == 81) //input name bar bounding box
+					continue;
+				Nocursortype();
+				tmp.push_back(ch);
+				if (tmp.size() > 32 && !notiFlag) {
+					notiFlag = true;
+					TextColor(ColorCode_DarkRed);
+					gotoXY(startX - 17, startY + 2);
+					cout << "Your name must be between 0 and 32 characters long";
+					TextColor(ColorCode_White);
+				}
+				gotoXY(startX, startY);
+				cout << tmp;
+				UnNocursortype();
+			}
+		}
+		//keyboardSound(isMute);			//sound when type by keyboard
+	}
+}
+
 bool GAME::saveGameMenu() {
 	system("cls");
 	int x = 40, y = 10;
@@ -737,6 +742,7 @@ bool GAME::saveGameMenu() {
 		{
 		case 0:
 		{
+			inputSaveGameName();
 			//save game function
 			return true;
 			break;

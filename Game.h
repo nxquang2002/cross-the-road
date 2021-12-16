@@ -33,6 +33,7 @@ public:
 	//void setting2();			// add sound to setting
 	void printCongrat();
 	bool printLose();
+	void inputSaveGameName();
 	bool saveGameMenu();
 	int backToMenu();
 private:
