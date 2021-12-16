@@ -6,17 +6,18 @@ SINGLEROW::SINGLEROW(bool right, int y, int dist, int t) {
     rowY = y;
     distance = dist;
     timeRedLight = t;
-    gotoXY(123, rowY);
-    TextColor(10);          //Draw the light
-    cout << (char)254;
-    TextColor(15);
+    //gotoXY(123, rowY);
+    //TextColor(10);          //Draw the light
+    //cout << (char)254;
+    //TextColor(15);
 }
 
 SINGLEROW::~SINGLEROW() {
     for (int i = 0; i < enemies.size(); ++i) {
-        //enemies[i]->~ENEMY();
         delete enemies[i];
+        enemies[i] = nullptr;
     }
+    enemies.clear();
 }
 
 bool SINGLEROW::addEnemy(int type, POSITION pos, int speed) {
@@ -40,13 +41,13 @@ bool SINGLEROW::addEnemy(int type, POSITION pos, int speed) {
         delete nEnemy;
         return false;
     }
-    else if (!enemies.empty() && dirRight && pos.getX() + nEnemy->getWidth() + distance 
+    else if (!enemies.empty() && dirRight && pos.getX() + nEnemy->getWidth() + distance
         >= enemies.back()->getPos().getX() - enemies.back()->getWidth()) {
         delete nEnemy;
         return false;
     }
-    else if(!enemies.empty() && !dirRight && pos.getX() - nEnemy->getWidth() - distance 
-        <= enemies.back()->getPos().getX() + enemies.back()->getWidth()){
+    else if (!enemies.empty() && !dirRight && pos.getX() - nEnemy->getWidth() - distance
+        <= enemies.back()->getPos().getX() + enemies.back()->getWidth()) {
         delete nEnemy;
         return false;
     }
@@ -61,7 +62,7 @@ int SINGLEROW::getSize() {
     return enemies.size();
 }
 
-int SINGLEROW::getY() { 
+int SINGLEROW::getY() {
     //gotoXY(0, 5);
     return rowY;
 }
@@ -118,7 +119,7 @@ void SINGLEROW::setDistance(int dist) {
     distance = dist;
 }
 
-vector<ENEMY*> SINGLEROW::getListEnemies() const{
+vector<ENEMY*> SINGLEROW::getListEnemies() const {
     return enemies;
 }
 
@@ -153,7 +154,7 @@ void SINGLEROW::saveSingleRow(ofstream& ofs) {
     ofs.write((char*)&dirRight, sizeof(bool));
     ofs.write((char*)&redLight, sizeof(bool));
     ofs.write((char*)&timeRedLight, sizeof(int));
-    ofs.write((char*)&n, sizeof(int)); 
+    ofs.write((char*)&n, sizeof(int));
     for (int i = 0; i < n; i++) {
         enemies[i]->saveEnemy(ofs);
     }
@@ -165,22 +166,25 @@ void SINGLEROW::loadSingleRow(ifstream& ifs, LEVEL level) {
     ifs.read((char*)&dirRight, sizeof(bool));
     ifs.read((char*)&redLight, sizeof(bool));
     ifs.read((char*)&timeRedLight, sizeof(int));
-    ifs.read((char*)&n, sizeof(int)); 
+    ifs.read((char*)&n, sizeof(int));
     for (int i = 0; i < n; i++) {
         ENEMY* tmp = nullptr;
         ifs.read((char*)&p, sizeof(POSITION));
         ifs.read((char*)&w, sizeof(int));
-        switch(w) {
-            case 2:
-                tmp = new Bird(p, dirRight, level.getSpeed());
-            case 6:
-                tmp = new Car(p, dirRight, level.getSpeed());
-            case 7:
-                tmp = new Dinosaur(p, dirRight, level.getSpeed());
-            case 8:
-                tmp = new Truck(p, dirRight, level.getSpeed());
+        switch (w) {
+        //2, 6, 7, 8 are the width of enemy type, they're unique.
+        case 2:     
+            addEnemy(2, p, level.getSpeed());      //Bird;
+            break;
+        case 6:
+            addEnemy(0, p, level.getSpeed());      //Car
+            break;
+        case 7:
+            addEnemy(3, p, level.getSpeed());      //Dinosaur
+            break;
+        case 8:
+            addEnemy(1, p, level.getSpeed());      //Truck
+            break;
         }
-        tmp->getShape();
-        enemies.push_back(tmp);
     }
 }
