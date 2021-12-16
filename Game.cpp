@@ -356,7 +356,7 @@ void GAME::loadGame() {
 				}
 			}
 			else if (!noSaveGame && key == ENTER) {
-				map->loadGame(path + fileName[option] + ".txt");
+				map->loadGame(path + fileName[option] + ".dat");
 				return; 
 			}
 			else if (key == ESC) {
