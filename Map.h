@@ -26,13 +26,13 @@ private:
 	int width, height;
 	char map[36][125];
 	bool isPause;
-	bool isEnd;
+	//bool isEnd;
 	PLAYER player;
 	ROWS rows;
 	LEVEL level;
-	GAME *game;
+	GAME* game;
 public:
-	MAP(GAME *gm);
+	MAP(GAME* gm);
 	~MAP();
 
 	void drawMap();

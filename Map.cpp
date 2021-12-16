@@ -1,7 +1,7 @@
 #include "Map.h"
 
 
-MAP::MAP(GAME* gm) : width(120), height(35), isPause(0), isEnd(0), player(POSITION(50, 33)), level(LEVEL(1)), game(gm) {
+MAP::MAP(GAME* gm) : width(120), height(35), isPause(0), player(POSITION(50, 33)), level(LEVEL(1)), game(gm), rows(ROWS(7)) {
 	for (int i = 0; i <= width; ++i) {
 		map[0][i] = map[height][i] = '-';
 	}
@@ -30,6 +30,13 @@ void MAP::drawMap() {
 		for (int j = 0; j <= width + 1; ++j)
 			cout << map[i][j];
 		cout << endl;
+		
+	}
+	for (int i = 0; i < 5; ++i) {
+		gotoXY(123, 3 + 5 * (i + 1));
+		TextColor(10);          //Draw the light
+		cout << (char)254;
+		TextColor(15);
 	}
 
 	drawRecSingle(130, 1, 40, 20);
@@ -165,20 +172,23 @@ void MAP::runGame() {
 	int distance = level.getDistance();
 	int lightPhase = level.getLightPhase();
 	int epoch = level.getEpoch();
-	gameSound(isMute);			// start sound when game run
+	gameSound(isMute);								// start sound when game run
 	newState();
-	while (!isEnd) {
+	while (true) {
 		if (!isPause) {
 			rows.newState(t, speed, lightPhase, epoch);
 		}
 		if (_kbhit()) {
 			key = _getch();
 			if (key == 27) {
-				if (game->backToMenu()) {
-					isEnd = true;
+				int back = game->backToMenu();
+				if (back == 0 || back == 1) {
+					//Back with or without save
+					system("cls");
+					drawLoadingBar();
 					break;
 				}
-				else continueGame();
+				else continueGame();				//Cancel
 			}
 			else if (key == 'p' || key == 'P') {
 				isPause = true;
@@ -186,8 +196,12 @@ void MAP::runGame() {
 				if (pauseOption == 0)
 					isPause = false;
 				else if (pauseOption == 3) {
-					if (game->backToMenu())
+					int back = game->backToMenu();
+					if (back == 0 || back == 1) {
+						system("cls");
+						drawLoadingBar();
 						break;
+					}
 					else {
 						continueGame();
 						isPause = false;
@@ -273,6 +287,7 @@ void MAP::replay() {
 }
 
 bool MAP::checkCrash() {
+	//Get enemy of rows where player is standing and check collision.
 	vector<int> currentRows;
 	player.getCurrentRows(currentRows);
 	if (currentRows.empty())
@@ -292,7 +307,7 @@ void MAP::saveGame() {
 	ofstream ofs;
 	string path = "SaveGame/";
 
-	//ghi tên file vô một cái file tổng hợp những file lưu
+	//A text file stores all names of saved file.
 	ofs.open(path + "SaveGameFileName.txt", ios::app);
 	if (!ofs.is_open()) {
 		cout << "Cannot create file!\n";
@@ -304,7 +319,7 @@ void MAP::saveGame() {
 	ofs.close();
 
 
-	ofs.open(path + player.getName() + ".txt", ios::binary);
+	ofs.open(path + player.getName() + ".dat", ios::binary);
 	if (!ofs.is_open()) {
 		cout << "Cannot create file!\n";
 		ofs.close();
@@ -316,9 +331,6 @@ void MAP::saveGame() {
 
 
 void MAP::loadGame(string fileName) {
-	//this->~MAP();
-	//new(&map) MAP(game);
-
 	rows.~ROWS();
 	new(&rows) ROWS();
 
