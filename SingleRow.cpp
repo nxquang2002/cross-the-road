@@ -1,190 +1,205 @@
-#include "SingleRow.h"
+#include "Player.h"
 
-SINGLEROW::SINGLEROW(bool right, int y, int dist, int t) {
-    dirRight = right;
-    redLight = false;
-    rowY = y;
-    distance = dist;
-    timeRedLight = t;
-    //gotoXY(123, rowY);
-    //TextColor(10);          //Draw the light
-    //cout << (char)254;
-    //TextColor(15);
+PLAYER::PLAYER(POSITION position, bool dead, bool win) {
+	pos = position;
+	isDead = dead;
+	isWin = win;
+	name = "";
 }
 
-SINGLEROW::~SINGLEROW() {
-    for (int i = 0; i < enemies.size(); ++i) {
-        delete enemies[i];
-        enemies[i] = nullptr;
-    }
-    enemies.clear();
+void PLAYER::moveLeft() {
+	if (pos.getX() - 1 < SCREEN_LEFT)
+		return;
+	deleteOldPlayer();
+	pos += POSITION(-1, 0);
+	drawPlayer();
 }
 
-bool SINGLEROW::addEnemy(int type, POSITION pos, int speed) {
-    ENEMY* nEnemy = nullptr;
-    switch (type) {
-    case (0):
-        nEnemy = new Car(pos, dirRight, speed);
-        break;
-    case(1):
-        nEnemy = new Truck(pos, dirRight, speed);
-        break;
-    case 2:
-        nEnemy = new Bird(pos, dirRight, speed);
-        break;
-    case 3:
-        nEnemy = new Dinosaur(pos, dirRight, speed);
-        break;
-    }
-    nEnemy->getShape();
-    if (nEnemy->isOutOfMap()) {
-        delete nEnemy;
-        return false;
-    }
-    else if (!enemies.empty() && dirRight && pos.getX() + nEnemy->getWidth() + distance
-        >= enemies.back()->getPos().getX() - enemies.back()->getWidth()) {
-        delete nEnemy;
-        return false;
-    }
-    else if (!enemies.empty() && !dirRight && pos.getX() - nEnemy->getWidth() - distance
-        <= enemies.back()->getPos().getX() + enemies.back()->getWidth()) {
-        delete nEnemy;
-        return false;
-    }
-    else {
-        enemies.push_back(nEnemy);
-        return true;
-    }
-    return true;
+void PLAYER::moveUp() {
+	if (pos.getY() - 1 < SCREEN_TOP)
+		return;
+	deleteOldPlayer();
+	pos += POSITION(0, -1);
+	drawPlayer();
 }
 
-int SINGLEROW::getSize() {
-    return enemies.size();
+void PLAYER::moveDown() {
+	if (pos.getY() + 1 > SCREEN_BOTTOM)
+		return;
+	deleteOldPlayer();
+	pos += POSITION(0, 1);
+	drawPlayer();
 }
 
-int SINGLEROW::getY() {
-    //gotoXY(0, 5);
-    return rowY;
+void PLAYER::moveRight() {
+	if (pos.getX() + 1 > SCREEN_RIGHT)
+		return;
+	deleteOldPlayer();
+	pos += POSITION(1, 0);
+	drawPlayer();
 }
 
-void SINGLEROW::test() {
-    for (int i = 0; i < enemies.size(); i++) {
-        cout << "Enemies[" << i << "]:\n";
-        cout << "\tx: " << enemies[i]->getPos().getX() << "\n";
-        cout << "\ty: " << enemies[i]->getPos().getY() << "\n";
-    }
+bool PLAYER::checkWin() {
+	int bot = (pos.getY() + height) / 5 - 1;
+	if (bot < 0) {
+		isWin = true;
+		return true;
+	}
+	return false;
 }
 
-int SINGLEROW::getTimeRedLight() {
-    return timeRedLight;
-}
-void SINGLEROW::setTimeRedLight(int t) {
-    timeRedLight = t;
-}
-
-bool SINGLEROW::getRedLight() {
-    return redLight;
-}
-
-void SINGLEROW::switchLight() {
-    if (redLight) {
-        redLight = false;
-        gotoXY(123, rowY);
-        TextColor(10);
-        cout << (char)254;
-        gotoXY(123, rowY - 1);
-        cout << ' ';
-        TextColor(15);
-    }
-    else {
-        gotoXY(123, rowY - 1);
-        TextColor(12);
-        cout << (char)254;
-        gotoXY(123, rowY);
-        cout << ' ';
-        TextColor(15);
-        redLight = true;
-    }
+void PLAYER::drawPlayer() {
+	string shape[] = {
+		" o ",
+		"/|\\",
+		"/ \\" };
+	for (int i = -height; i < height + 1; i++) {
+		gotoXY(pos.getX() - width, pos.getY() + i);
+		for (int j = 0; j < 2 * width + 1; j++) {
+			cout << shape[i + height][j];
+		}
+	}
 }
 
-void SINGLEROW::setRedLight() {
-    redLight = true;
+void PLAYER::deleteOldPlayer() {
+	for (int i = -height; i < height + 1; i++) {
+		gotoXY(pos.getX() - width, pos.getY() + i);
+		for (int j = 0; j < 2 * width + 1; j++) {
+			cout << ' ';
+		}
+	}
+
+	for (int i = -height; i < height + 1; i++) {
+		if ((pos.getY() + i) % 5 == 0 && (pos.getY() + i) <= 35) {
+			for (int j = -width; j < width + 1; j++) {
+				gotoXY(pos.getX() - j, pos.getY() + i);
+				cout << '-';
+			}
+		}
+	}
 }
 
-bool SINGLEROW::getDirection() {
-    return dirRight;
+bool PLAYER::isCollide(ENEMY* currentEnemy) {
+	if (pos.getX() + width < currentEnemy->getPos().getX() - currentEnemy->getWidth())
+		return false;
+	if (pos.getX() - width > currentEnemy->getPos().getX() + currentEnemy->getWidth())
+		return false;
+	if (pos.getY() + height < currentEnemy->getPos().getY() - currentEnemy->getHeight())
+		return false;
+	if (pos.getY() - height > currentEnemy->getPos().getY() + currentEnemy->getHeight())
+		return false;
+	return true;
 }
 
-void SINGLEROW::setDistance(int dist) {
-    distance = dist;
+
+bool PLAYER::checkCrash(vector<ENEMY*> enemy) {
+	int posX = pos.getX(), posY = pos.getY();
+	for (int i = 0; i < enemy.size(); i++) {
+		if (isCollide(enemy[i]))
+		{
+			enemy[i]->enemySound(isMute);
+			return true;
+		}
+	}
+	return false;
 }
 
-vector<ENEMY*> SINGLEROW::getListEnemies() const {
-    return enemies;
+void PLAYER::drawEffect(char** shape, int width, int height) {
+	deleteOldPlayer();
+	for (int k = 0; k < 5; k++) {
+		for (int i = -height; i < height + 1; i++) {
+			gotoXY(pos.getX() - width, pos.getY() + i);
+			for (int j = 0; j < 2 * width + 1; j++) {
+				cout << shape[i + height][j];
+			}
+		}
+		Sleep(100);
+		if (k < 4) {
+			for (int i = -height; i < height + 1; i++) {
+				gotoXY(pos.getX() - width, pos.getY() + i);
+				for (int j = 0; j < 2 * width + 1; j++) {
+					cout << ' ';
+				}
+			}
+			Sleep(100);
+		}
+	}
 }
 
-void SINGLEROW::newState() {
-    if (redLight)
-        return;
-    for (int i = 0; i < enemies.size(); i++) {
-        enemies[i]->deleteOldEnemy();
-        enemies[i]->move();
-    }
+void PLAYER::getCurrentRows(vector<int>& rows) {
+	int top = pos.getY() - height;
+	int bot = pos.getY() + height;
+	int r1 = top / 5 - 1;
+	int r2 = bot / 5 - 1;
+	if ((r1 >= 5 && r2 >= 5) || (r1 < 0 && r2 < 0))
+		return;
+	if (r1 == r2)
+		rows.push_back(r1);
+	else {
+		if (r1 >= 0 && r1 < 5) rows.push_back(r1);
+		if (r2 >= 0 && r2 < 5) rows.push_back(r2);
+	}
 }
 
-void SINGLEROW::draw()
+void PLAYER::crashEffect() {
+	ifstream ifs;
+	ifs.open("explosion.txt");
+
+	if (!ifs.is_open()) {
+		cout << "Cannot open explosion.txt!\n";
+		return;
+	}
+
+	int x, y;
+	ifs >> x >> y;
+	char** shape;
+	int width = x / 2;
+	int height = y / 2;
+	shape = new char* [y];
+	for (int i = 0; i < y; i++)
+		shape[i] = new char[x];
+
+	string s;
+	getline(ifs, s, '\n');
+	for (int i = 0; i < y; i++) {
+		getline(ifs, s, '\n');
+		for (int j = 0; j < x; j++) {
+			shape[i][j] = s[j];
+		}
+	}
+	ifs.close();
+	drawEffect(shape, width, height);
+
+	for (int i = 0; i < y; i++)
+		delete[] shape[i];
+	delete[] shape;
+}
+
+void PLAYER::setPosition(int x, int y) {
+	pos.setX(x);
+	pos.setY(y);
+}
+
+void PLAYER::savePlayer(ofstream& ofs) {
+	ofs.write((char*)&pos, sizeof(POSITION));
+	ofs.write((char*)&isDead, sizeof(bool));
+	ofs.write((char*)&isWin, sizeof(bool));
+}
+
+void PLAYER::loadPlayer(ifstream& ifs) {
+	ifs.read((char*)&pos, sizeof(POSITION));
+	ifs.read((char*)&isDead, sizeof(bool));
+	ifs.read((char*)&isWin, sizeof(bool));
+}
+
+string PLAYER::getName() {
+	return name;
+}
+
+void PLAYER::setName(string s) {
+	name = s;
+}
+void PLAYER::setMute(bool mute)
 {
-    for (int i = 0; i < enemies.size(); i++) {
-        if (!enemies[i]->isOutOfMap())
-            enemies[i]->drawShape();
-    }
-}
-void SINGLEROW::deleteExpireEnemy() {
-    if (enemies.size() == 0)
-        return;
-    if (enemies[0]->isOutOfMap()) {
-        ENEMY* temp = enemies[0];
-        enemies.erase(enemies.begin());
-        delete temp;
-    }
-}
-
-void SINGLEROW::saveSingleRow(ofstream& ofs) {
-    int n = enemies.size();
-    ofs.write((char*)&dirRight, sizeof(bool));
-    ofs.write((char*)&redLight, sizeof(bool));
-    ofs.write((char*)&timeRedLight, sizeof(int));
-    ofs.write((char*)&n, sizeof(int));
-    for (int i = 0; i < n; i++) {
-        enemies[i]->saveEnemy(ofs);
-    }
-}
-
-void SINGLEROW::loadSingleRow(ifstream& ifs, LEVEL level) {
-    int n, w;
-    POSITION p;
-    ifs.read((char*)&dirRight, sizeof(bool));
-    ifs.read((char*)&redLight, sizeof(bool));
-    ifs.read((char*)&timeRedLight, sizeof(int));
-    ifs.read((char*)&n, sizeof(int));
-    for (int i = 0; i < n; i++) {
-        ENEMY* tmp = nullptr;
-        ifs.read((char*)&p, sizeof(POSITION));
-        ifs.read((char*)&w, sizeof(int));
-        switch (w) {
-        //2, 6, 7, 8 are the width of enemy type, they're unique.
-        case 2:     
-            addEnemy(2, p, level.getSpeed());      //Bird;
-            break;
-        case 6:
-            addEnemy(0, p, level.getSpeed());      //Car
-            break;
-        case 7:
-            addEnemy(3, p, level.getSpeed());      //Dinosaur
-            break;
-        case 8:
-            addEnemy(1, p, level.getSpeed());      //Truck
-            break;
-        }
-    }
+	isMute = mute;
 }

@@ -4,6 +4,7 @@ PLAYER::PLAYER(POSITION position, bool dead, bool win) {
 	pos = position;
 	isDead = dead;
 	isWin = win;
+	name = "";
 }
 
 void PLAYER::moveLeft() {
@@ -78,17 +79,6 @@ void PLAYER::deleteOldPlayer() {
 	}
 }
 
-/*
-bool PLAYER::isCollide(int posX, int posY, ENEMY* currentEnemy) {
-	if (posX >= currentEnemy->getPos().getX() - currentEnemy->getWidth() &&
-		posX <= currentEnemy->getPos().getX() + currentEnemy->getWidth() &&
-		posY >= currentEnemy->getPos().getY() - currentEnemy->getHeight() &&
-		posY <= currentEnemy->getPos().getY() + currentEnemy->getHeight())
-		return true;
-
-	return false;
-}*/
-
 bool PLAYER::isCollide(ENEMY* currentEnemy) {
 	if (pos.getX() + width < currentEnemy->getPos().getX() - currentEnemy->getWidth())
 		return false;
@@ -105,7 +95,7 @@ bool PLAYER::isCollide(ENEMY* currentEnemy) {
 bool PLAYER::checkCrash(vector<ENEMY*> enemy) {
 	int posX = pos.getX(), posY = pos.getY();
 	for (int i = 0; i < enemy.size(); i++) {
-		if (isCollide(enemy[i])) 
+		if (isCollide(enemy[i]))
 		{
 			enemy[i]->enemySound(isMute);
 			return true;
