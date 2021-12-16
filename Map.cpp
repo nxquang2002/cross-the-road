@@ -113,6 +113,7 @@ void MAP::newState() {
 
 	rows.~ROWS();
 	new(&rows) ROWS(dist);
+
 	rows.initializeState(speed);
 	player.deleteOldPlayer();
 	player.setPosition(50, 33);
@@ -165,27 +166,40 @@ void MAP::hidePausePanel(string option[], int length, int x, int y) {
 }
 
 //runGame ver1
-void MAP::runGame() {
+void MAP::runGame(bool load) {
 	int t = 0;
 	char key;
 	int speed = level.getSpeed();
 	int distance = level.getDistance();
 	int lightPhase = level.getLightPhase();
 	int epoch = level.getEpoch();
-	gameSound(isMute);								// start sound when game run
-	newState();
+	gameSound(false);								// start sound when game run
+	if (load)
+		loadState();
+	else newState();;
 	while (true) {
 		if (!isPause) {
 			rows.newState(t, speed, lightPhase, epoch);
 		}
 		if (_kbhit()) {
 			key = _getch();
+			chooseSound(isMute);
 			if (key == 27) {
 				int back = game->backToMenu();
-				if (back == 0 || back == 1) {
-					//Back with or without save
+				if (back == 0) {
+					//Back and save
+					system("cls");
+					game->saveGameMenu();
 					system("cls");
 					drawLoadingBar();
+					system("cls");
+					break;
+				}
+				else if (back == 1) {
+					//Back without save
+					system("cls");
+					drawLoadingBar();
+					system("cls");
 					break;
 				}
 				else continueGame();				//Cancel
@@ -193,18 +207,41 @@ void MAP::runGame() {
 			else if (key == 'p' || key == 'P') {
 				isPause = true;
 				int pauseOption = pausePanel();		//Call Pause panel and return option
-				if (pauseOption == 0)
-					isPause = false;
+				isPause = false;
+				if (pauseOption == 1) {
+					if (game->saveGameMenu()) {
+						system("cls");
+						saveGame();
+						drawLoadingBar();
+					}
+					continueGame();
+				}
+				else if (pauseOption == 2) {
+					game->loadGame();
+					system("cls");
+					loadState();
+				}
 				else if (pauseOption == 3) {
+					isPause = false;
 					int back = game->backToMenu();
-					if (back == 0 || back == 1) {
+					if (back == 0) {
+						//Back and save
+						system("cls");
+						game->saveGameMenu();
 						system("cls");
 						drawLoadingBar();
+						system("cls");
 						break;
 					}
-					else {
+					else if (back == 1) {
+						//Back without save
+						system("cls");
+						drawLoadingBar();
+						system("cls");
+						break;
+					}
+					else {//Cancel
 						continueGame();
-						isPause = false;
 					}
 				}
 			}
@@ -218,9 +255,7 @@ void MAP::runGame() {
 			}
 			else if (key == 't' || key == 'T') {
 				game->loadGame();
-				system("cls");
-				subNewGame();
-				system("cls");
+ 				system("cls");
 				loadState();
 			}
 			else {
@@ -243,6 +278,7 @@ void MAP::runGame() {
 			else {
 				system("cls");
 				drawLoadingBar();
+				system("cls");
 				break;
 			}
 		}
@@ -255,6 +291,7 @@ void MAP::runGame() {
 				game->printCongrat();
 				system("cls");
 				drawLoadingBar();
+				system("cls");
 				break;
 			}
 			if (game->levelUp()) {			//Continue playing
@@ -269,6 +306,7 @@ void MAP::runGame() {
 			else {
 				system("cls");
 				drawLoadingBar();
+				system("cls");
 				break;
 			}
 
@@ -329,7 +367,7 @@ void MAP::saveGame() {
 	player.savePlayer(ofs);
 	level.saveLevel(ofs);
 	rows.saveRows(ofs);
-	ofs.close();
+	ofs.close();   
 }
 
 
@@ -348,6 +386,11 @@ void MAP::loadGame(string fileName) {
 	rows.loadRows(ifs, level);
 	ifs.close();
 }
+
+bool MAP::isSavedBefore() {
+	return player.getName() != "";
+}
+
 void MAP::setMute(bool mute)
 {
 	isMute = mute;

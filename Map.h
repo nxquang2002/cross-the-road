@@ -42,7 +42,7 @@ public:
 	void newState();
 	void loadState();	//After call loadGame(), loadState() for showing stuffs to map.
 	bool checkCrash();
-	void runGame();		//Most important function.
+	void runGame(bool load);		//Most important function.
 	void continueGame();
 	int pausePanel();
 	void hidePausePanel(string option[], int length, int x, int y);
@@ -51,6 +51,7 @@ public:
 	void levelUp();
 	void replay();	//Lose and return to level 1
 	void setPlayerName(string s);
+	bool isSavedBefore();	//If game is loaded, player has name, return true; else return false;
 	void setMute(bool mute);
 };
 
