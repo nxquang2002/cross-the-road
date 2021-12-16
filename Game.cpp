@@ -241,7 +241,8 @@ void GAME::loadGameMenu(vector<string>& fileName, bool& noSaveGame, int& startX,
 
 	if (fileName.size() == 0) noSaveGame = true;
 	option = 0;
-	maxFile = min(fileName.size(), 5);
+	int haha = fileName.size();
+	maxFile = min(haha, 5);
 	if (noSaveGame) {
 		TextColor(ColorCode_Yellow);
 		gotoXY(startX - 6, startY);
@@ -648,6 +649,13 @@ void GAME::inputSaveGameName() {
 	Nocursortype();
 	TextColor(ColorCode_White);
 
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			gotoXY(80 + i, 20 + j);
+			cout << ' ';
+		}
+	}
+
 	drawInputNameBar();
 
 	bool notiFlag = 0;
@@ -666,6 +674,7 @@ void GAME::inputSaveGameName() {
 		}
 		else {
 			if (ch == ESC) {
+				Nocursortype();
 				// back to the previous menu
 				return;
 			}
@@ -673,6 +682,7 @@ void GAME::inputSaveGameName() {
 				if (tmp.size() > 32)
 					continue;
 				map->setPlayerName(tmp);
+				Nocursortype();
 				system("cls");
 				return;
 			}
@@ -688,8 +698,8 @@ void GAME::inputSaveGameName() {
 						cout << "                                                  ";
 						gotoXY(startX + tmp.size(), startY);
 					}
-					//gotoXY(startX, startY);
-					//cout << tmp;
+					gotoXY(startX, startY);
+					cout << tmp;
 					UnNocursortype();
 				}
 			}
@@ -867,40 +877,9 @@ void subNewGame() {
 }
 
 void drawInputNameBar() {
-	int startX = 82;
-	int startY = 17;
-
-	// new game board
-	TextColor(ColorCode_DarkCyan);
-	gotoXY(startX + 2, startY + 1);
-	cout << "NEW GAME";
-
-	gotoXY(startX + 1, startY);
-	for (int i = 0; i < 10; ++i) //10 is the size of " NEW GAME "
-		cout << char(205);
-
-	gotoXY(startX + 1, startY + 2);
-	for (int i = 0; i < 10; ++i) //10 is the size of " NEW GAME "
-		cout << char(205);
-
-	gotoXY(startX, startY);
-	cout << char(201);
-	gotoXY(startX, startY + 2);
-	cout << char(200);
-
-	gotoXY(startX + 11, startY); // +11 because " NEW GAME " is 10 and plus 1 more  
-	cout << char(187);
-	gotoXY(startX + 11, startY + 2); // +11 because " NEW GAME " is 10 and plus 1 more
-	cout << char(188);
-
-	gotoXY(startX, startY + 1);
-	cout << char(186);
-	gotoXY(startX + 11, startY + 1);
-	cout << char(186);
-
 	// enter your name board
-	startX = 37;
-	startY = 20;
+	int startX = 37;
+	int startY = 20;
 
 	gotoXY(startX + 2, startY + 1);
 	cout << "Enter your name: ";
@@ -927,8 +906,6 @@ void drawInputNameBar() {
 	cout << char(186);
 	gotoXY(startX + 101, startY + 1);
 	cout << char(186);
-
-	TextColor(ColorCode_White);
 }
 
 
