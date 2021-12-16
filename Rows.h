@@ -10,7 +10,8 @@ class ROWS {
 private:
     vector<SINGLEROW*> rows;
 public:
-    ROWS(int dist = 7);
+    ROWS();
+    ROWS(int dist);
     ~ROWS();
     void initializeState(int speed);
     void newState(int t, int v, int lightPhase, int epoch);
