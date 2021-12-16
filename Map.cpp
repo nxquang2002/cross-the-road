@@ -327,6 +327,9 @@ void MAP::saveGame() {
 		return;
 	}
 	player.savePlayer(ofs);
+	level.saveLevel(ofs);
+	rows.saveRows(ofs);
+	ofs.close();
 }
 
 
