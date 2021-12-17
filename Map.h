@@ -40,20 +40,19 @@ public:
 	void drawPlayer();
 	void updatePlayerPos(char key);
 	void newState();
-	void loadState();	//After call loadGame(), loadState() for showing stuffs to map.
+	void loadState();				//After call loadGame(), loadState() for showing stuffs to map.
 	bool checkCrash();
 	void runGame(bool load);		//Most important function.
 	void continueGame();
 	int pausePanel();
 	void hidePausePanel(string option[], int length, int x, int y);
-	void saveGame();
+	void saveGame(bool isExist);	//isExist = true when game is saved before
 	void loadGame(string fileName);
 	void levelUp();
-	void replay();	//Lose and return to level 1
+	void replay();					//Lose and return to level 1
 	void setPlayerName(string s);
-	bool isSavedBefore();	//If game is loaded, player has name, return true; else return false;
+	bool isSavedBefore();			//If game is loaded, player has name, return true; else return false;
 	void setMute(bool mute);
 };
 
 #endif // !_MAP_H_
-

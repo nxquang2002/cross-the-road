@@ -24,7 +24,7 @@ public:
 	GAME();
 	~GAME();
 	void newGame();
-	void loadGame();
+	bool loadGame();
 	void loadGameMenu(vector<string>& fileName, bool& noSaveGame, int& startX, int& startY, string& path, int& option, int& maxFile);
 	void menu();
 	void title();

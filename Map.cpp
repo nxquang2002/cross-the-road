@@ -1,6 +1,5 @@
 #include "Map.h"
 
-
 MAP::MAP(GAME* gm) : width(120), height(35), isPause(0), player(POSITION(50, 33)), level(LEVEL(1)), game(gm), rows(ROWS(7)) {
 	for (int i = 0; i <= width; ++i) {
 		map[0][i] = map[height][i] = '-';
@@ -113,7 +112,7 @@ void MAP::newState() {
 
 	rows.~ROWS();
 	new(&rows) ROWS(dist);
-
+	
 	rows.initializeState(speed);
 	player.deleteOldPlayer();
 	player.setPosition(50, 33);
@@ -176,10 +175,16 @@ void MAP::runGame(bool load) {
 	gameSound(false);								// start sound when game run
 	if (load)
 		loadState();
-	else newState();;
+	else {
+		setPlayerName("");
+		level.moveToLevel(1);
+		newState();
+	}
 	while (true) {
 		if (!isPause) {
-			rows.newState(t, speed, lightPhase, epoch);
+			if(level.getLevel() >= 4)
+				rows.nextState(t, speed, lightPhase, epoch, true);
+			else rows.nextState(t, speed, lightPhase, epoch, false);
 		}
 		if (_kbhit()) {
 			key = _getch();
@@ -211,7 +216,6 @@ void MAP::runGame(bool load) {
 				if (pauseOption == 1) {
 					if (game->saveGameMenu()) {
 						system("cls");
-						saveGame();
 						drawLoadingBar();
 					}
 					continueGame();
@@ -248,7 +252,6 @@ void MAP::runGame(bool load) {
 			else if (key == 'l' || key == 'L') {
 				if (game->saveGameMenu()) {
 					system("cls");
-					saveGame();
 					drawLoadingBar();
 				}
 				continueGame();
@@ -269,7 +272,7 @@ void MAP::runGame(bool load) {
 				//Lose and start a new game
 				subNewGame();
 				gameSound(isMute);				// restart sound when replay
-				replay();	//return to level 1
+				replay();						//return to level 1
 				speed = level.getSpeed();
 				distance = level.getDistance();
 				lightPhase = level.getLightPhase();
@@ -341,20 +344,22 @@ bool MAP::checkCrash() {
 	return false;
 }
 
-void MAP::saveGame() {
+void MAP::saveGame(bool isExist) {
 	ofstream ofs;
 	string path = "SaveGame/";
 
-	//A text file stores all names of saved file.
-	ofs.open(path + "SaveGameFileName.txt", ios::app);
-	if (!ofs.is_open()) {
-		cout << "Cannot create file!\n";
-		system("pause");
+	if (!isExist) {
+	//If file exist, there is no need to write the name to list name.
+		ofs.open(path + "SaveGameFileName.txt", ios::app);
+		if (!ofs.is_open()) {
+			cout << "Cannot create file!\n";
+			system("pause");
+			ofs.close();
+			return;
+		}
+		ofs << player.getName() << "\n";
 		ofs.close();
-		return;
 	}
-	ofs << player.getName() << "\n";
-	ofs.close();
 
 
 	ofs.open(path + player.getName() + ".dat", ios::binary);

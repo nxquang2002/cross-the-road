@@ -81,9 +81,9 @@ void GAME::setting()
 	int option = 0;
 	char key;
 
-	drawRecDouble(83, 15, 11, 1);
-	gotoXY(85, 16);
-	cout << "SETTINGS";
+	drawRecDouble(72, 14, 33, 8);
+	gotoXY(83, 16);
+	cout << "<< SETTINGS >>";
 	gotoXY(80, 19);
 	TextColor(11);
 	cout << opt[0] + sound[isMute];
@@ -184,7 +184,6 @@ void GAME::menu() {
 	string prompt[] = { "1. New game", "2. Load game", "3. Settings", "4. Exit" };
 	const int length = 4;
 	int choice = 0;
-	//gameSound(isMute); 
 	while (true) {
 		gameSound(isMute);
 		choice = returnChoice(prompt, length, x, y);
@@ -198,8 +197,8 @@ void GAME::menu() {
 				title();
 				break;
 			case 1:
-				loadGame();
-				map->runGame(true);
+				if (loadGame()) 
+					map->runGame(true);	
 				title();
 				break;
 			case 2:
@@ -208,6 +207,7 @@ void GAME::menu() {
 				break;
 			case 3:
 				system("cls");
+				drawLoadingBar();
 				return;
 			}
 			break;
@@ -248,25 +248,27 @@ void GAME::loadGameMenu(vector<string>& fileName, bool& noSaveGame, int& startX,
 		return;
 	}
 	else {
-		drawRecSingle(startX - 40, startY, 80, maxFile * 2 + 2);
+		drawRecSingle(startX - 40, startY, 80, maxFile * 2 + 4);
 		startY += 2;
 		for (int i = 0; i < maxFile; i++) {
 			if (i == 0) {
 				gotoXY(startX - (fileName[i].size() / 2) - 3, startY + 2 * i);
 				TextColor(ColorCode_Yellow);
 				cout << ">> " << fileName[i];
+				TextColor(ColorCode_White);
 			}
 			else {
 				gotoXY(startX - (fileName[i].size() / 2) - 1, startY + 2 * i);
-				TextColor(ColorCode_White);
 				cout << fileName[i];
 			}
 		}
+		gotoXY(startX - 14, startY + 2 * maxFile + 1);
+		cout << "<< Press [ESC] to cancel >>";
 	}
 
 }
 
-void GAME::loadGame() {
+bool GAME::loadGame() {
 	system("cls");
 	int startX = 80;
 	int startY = 10;
@@ -316,7 +318,6 @@ void GAME::loadGame() {
 					gotoXY(startX - (tmpS.size() / 2) - 3, startY);
 					cout << "                                        ";
 					gotoXY(startX - (tmpS.size() / 2) - 1, startY);
-					TextColor(ColorCode_White);
 					cout << tmpS;
 
 					//print the new selection to dark cyan
@@ -327,6 +328,7 @@ void GAME::loadGame() {
 					gotoXY(startX - (tmpS.size() / 2) - 3, startY);
 					TextColor(ColorCode_Yellow);
 					cout << ">> " << tmpS;
+					TextColor(ColorCode_White);
 				}
 			}
 			else if (!noSaveGame && (key == 'S' || key == 's')) {
@@ -337,7 +339,6 @@ void GAME::loadGame() {
 					gotoXY(startX - (tmpS.size() / 2) - 3, startY);
 					cout << "                                        ";
 					gotoXY(startX - (tmpS.size() / 2) - 1, startY);
-					TextColor(ColorCode_White);
 					cout << tmpS;
 
 					//print the new selection to dark cyan
@@ -348,6 +349,7 @@ void GAME::loadGame() {
 					gotoXY(startX - (tmpS.size() / 2) - 3, startY);
 					TextColor(ColorCode_Yellow);
 					cout << ">> " << tmpS;
+					TextColor(ColorCode_White);
 				}
 			}
 			else if (!noSaveGame && key == ENTER) {
@@ -355,11 +357,11 @@ void GAME::loadGame() {
 				map->loadGame(path + fileName[option] + ".dat");
 				system("cls");
 				subNewGame();
-				return;
+				return true;
 			}
 			else if (key == ESC) {
 				system("cls");
-				return;
+				return false;
 			}
 		}
 	}
@@ -408,6 +410,7 @@ int GAME::backToMenu() {
 	}
 }
 
+//with sound
 int returnChoice(string menu[], const int length, int x, int y) {
 	int choice = 0;
 	while (true) {
@@ -462,6 +465,7 @@ int returnChoice(string menu[], const int length, int x, int y) {
 	}
 }
 
+//without sound
 int returnChoice2(bool mute, string menu[], const int length, int x, int y)
 {
 	int choice = 0;
@@ -560,8 +564,8 @@ bool GAME::printLose() {
 	"| |   | '__/ _` / __| '_ \\| | | |",
 	"| \\__/\\ | | (_| \\__ \\ | | |_|_|_|",
 	" \\____/_|  \\__,_|___/_| |_(_|_|_)",
-	"                                  ",
 	"                                  " };
+	drawRecDouble(62, 9, 37, 7);
 	for (int i = 0; i < 8; i++) {
 		gotoXY(x, y++);
 		cout << title[i] << "\n";
@@ -748,9 +752,11 @@ bool GAME::saveGameMenu() {
 		{
 		case 0:
 		{
-			if(!map->isSavedBefore())
+			if (!map->isSavedBefore()) {
 				inputSaveGameName();
-			//save game function
+				map->saveGame(false);
+			}
+			else map->saveGame(true);
 			return true;
 			break;
 		}
