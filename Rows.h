@@ -14,7 +14,7 @@ public:
     ROWS(int dist);
     ~ROWS();
     void initializeState(int speed);
-    void newState(int t, int v, int lightPhase, int epoch);
+    void nextState(int t, int v, int lightPhase, int epoch, bool denser);
     vector<ENEMY*> listEnemies(int rowIndex) const;    //get the list of enemies in row i
     void saveRows(ofstream& ofs);
     void loadRows(ifstream& ifs, LEVEL level);

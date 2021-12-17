@@ -6,7 +6,7 @@
 
 using namespace std;
 #define MAX_LEVEL 5
-#define MIN_SPEED 2		
+#define MIN_SPEED 2	
 #define MAX_DISTANCE 7
 #define MAX_LIGHTPHASE 50000
 #define MAX_EPOCH 1000
@@ -26,6 +26,7 @@ public:
 	int getDistance();
 	int getLightPhase();
 	int getEpoch();
+	int getLevel();
 	bool passAllLevels();
 	void displayLevel();
 	void saveLevel(ofstream& ofs);

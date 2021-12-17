@@ -15,7 +15,7 @@ void LEVEL::NewLevel() {
 	speed++;
 	distance--;
 	lightPhase -= 5000;
-	epoch -= (epoch / 100) * 20; //epoch = 80% * epoch
+	epoch -= (epoch / 100) * 20;					//epoch = 80% * epoch
 }
 
 void LEVEL::moveToLevel(int lvl) {
@@ -42,6 +42,10 @@ int LEVEL::getDistance() {
 
 int LEVEL::getEpoch() {
 	return epoch;
+}
+
+int LEVEL::getLevel() {
+	return nLevel;
 }
 
 bool LEVEL::passAllLevels() {

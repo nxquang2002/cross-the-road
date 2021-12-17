@@ -39,8 +39,8 @@ vector<ENEMY*> ROWS::listEnemies(int rowIndex) const {
 
 
 //newState ver3
-void ROWS::newState(int t, int v, int lightPhase, int epoch) {
-    int ran, ran2;
+void ROWS::nextState(int t, int v, int lightPhase, int epoch, bool denser) {
+    int ran;
     srand(time(NULL));
     ran = rand() % 5;
     for (int j = 0; j < ROW_NUM; j++) {
@@ -84,23 +84,25 @@ void ROWS::newState(int t, int v, int lightPhase, int epoch) {
             int type = rand() % 4;
             rows[ran]->addEnemy(type, pos, v);
         }
-
-        ran2 = rand() % 5;
-        while (ran2 != ran)
-            ran2 = rand() % 5;
-        if (rows[ran2]->getSize() < 8) { //10
-            POSITION pos;
-            if (rows[ran2]->getDirection()) {
-                pos.setX(SCREEN_LEFT);
-                pos.setY(rows[ran2]->getY());
+        if (denser) {
+            //If reach high level, 2 rows is added the same time, quite denser.
+            int ran2 = rand() % 5;
+            while (ran2 == ran)
+                ran2 = rand() % 5;
+            if (rows[ran2]->getSize() < 8) { //10
+                POSITION pos;
+                if (rows[ran2]->getDirection()) {
+                    pos.setX(SCREEN_LEFT);
+                    pos.setY(rows[ran2]->getY());
+                }
+                else {
+                    pos.setX(SCREEN_RIGHT);
+                    pos.setY(rows[ran2]->getY());
+                }
+                srand(time(NULL));
+                int type = rand() % 4;
+                rows[ran2]->addEnemy(type, pos, v);
             }
-            else {
-                pos.setX(SCREEN_RIGHT);
-                pos.setY(rows[ran2]->getY());
-            }
-            srand(time(NULL));
-            int type = rand() % 4;
-            rows[ran2]->addEnemy(type, pos, v);
         }
     }
     //gotoXY(5, 38);
@@ -123,51 +125,3 @@ void ROWS::loadRows(ifstream& ifs, LEVEL level) {
         rows.push_back(tmp);
     }
 }
-
-//newState ver2
-/*
-void ROWS::newState(int t, int v, int lightPhase) {
-    int ran;
-    srand(time(NULL));
-    ran = rand() % 5;
-    for (int j = 0; j < ROW_NUM; j++) {
-        if (rows[j]->getRedLight()) {
-            if (rows[j]->getTimeRedLight() <= lightPhase) {
-                rows[j]->setTimeRedLight(rows[j]->getTimeRedLight() + 1);
-            }
-            else {
-                rows[j]->switchLight();
-            }
-        }
-        //time stop red light
-        if (t % lightPhase == 0) {
-            if (!rows[ran]->getRedLight()) {
-                rows[ran]->switchLight();
-                rows[ran]->setTimeRedLight(0);
-            }
-        }
-
-        rows[j]->newState();
-        rows[j]->deleteExpireEnemy();
-        rows[j]->draw();
-    }
-    if (t % 3 == 0) {
-        //Every 3 times, add 1 enemy, choose 1 random row to push.
-        ran = rand() % 5;
-        if (rows[ran]->getSize() < 5) {
-            POSITION pos;
-            if (rows[ran]->getDirection()) {
-                pos.setX(SCREEN_LEFT);
-                pos.setY(rows[ran]->getY());
-            }
-            else {
-                pos.setX(SCREEN_RIGHT);
-                pos.setY(rows[ran]->getY());
-            }
-            //ran = rand() % 4;
-            int type = rand() % 4;
-            rows[ran]->addEnemy(type, pos, v);
-        }
-    }
-}
-*/
