@@ -955,6 +955,15 @@ void keyboardSound(bool mute)
 		PlaySound(TEXT("keyboard.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	}
 }
+void winSound(bool mute)
+{
+	if (mute)
+		PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
+	else
+	{
+		PlaySound(TEXT("winSound.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	}
+}
 
 int main() {
 	GAME g;

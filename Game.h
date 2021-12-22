@@ -56,5 +56,6 @@ void gameSound(bool mute);
 void clickSound(bool mute);
 void chooseSound(bool mute);
 void keyboardSound(bool mute);
+void winSound(bool mute);
 
 #endif
