@@ -63,9 +63,14 @@ void MAP::drawMap() {
 	cout << "PAUSE PANEL";
 	gotoXY(10, 37);
 	level.displayLevel();
-	cout << "   SPEED: " << level.getSpeed();
+	gotoXY(85, 37);
+	cout << "PLAYER: ";
+	if (player.getName() == "")
+		cout << "Guest";
+	else cout << player.getName();
 	gotoXY(10, 39);
-	cout << "PLAYER: " << player.getName();
+	cout << "SPEED: " << level.getSpeed();
+	cout << "   DENSE: " << level.getDense();
 }
 
 
@@ -88,15 +93,19 @@ void MAP::updatePlayerPos(char key) {
 	switch (key)
 	{
 	case 'w':	//Up
+		chooseSound(isMute);
 		player.moveUp();
 		break;
 	case 's':	//Down
+		chooseSound(isMute);
 		player.moveDown();
 		break;
 	case 'd':	//Right
+		chooseSound(isMute);
 		player.moveRight();
 		break;
 	case 'a':	//Left
+		chooseSound(isMute);
 		player.moveLeft();
 		break;
 	default:
@@ -172,6 +181,7 @@ void MAP::runGame(bool load) {
 	int distance = level.getDistance();
 	int lightPhase = level.getLightPhase();
 	int epoch = level.getEpoch();
+	bool dense;
 	gameSound(false);								// start sound when game run
 	if (load)
 		loadState();
@@ -182,13 +192,15 @@ void MAP::runGame(bool load) {
 	}
 	while (true) {
 		if (!isPause) {
-			if(level.getLevel() >= 4)
-				rows.nextState(t, speed, lightPhase, epoch, true);
-			else rows.nextState(t, speed, lightPhase, epoch, false);
+			dense = level.getLevel() >= 3;
+			rows.nextState(t, speed, lightPhase, epoch, dense);
+			//if(level.getLevel() >= 4)
+			//	rows.nextState(t, speed, lightPhase, epoch, true);
+			//else rows.nextState(t, speed, lightPhase, epoch, false);
 		}
 		if (_kbhit()) {
 			key = _getch();
-			chooseSound(isMute);
+			//chooseSound(isMute);
 			if (key == 27) {
 				int back = game->backToMenu();
 				if (back == 0) {
@@ -289,6 +301,7 @@ void MAP::runGame(bool load) {
 		if (t >= INT_MAX)					//To prevent t from overflow
 			t = 0;
 		if (player.checkWin()) {			//If user pass level
+			//winSound(isMute);
 			system("pause");
 			if (level.passAllLevels()) {	//If player pass all level, return menu.
 				game->printCongrat();
