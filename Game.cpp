@@ -310,6 +310,7 @@ bool GAME::loadGame() {
 	while (true) {
 		if (_kbhit()) {
 			unsigned char key = _getch();
+			chooseSound(isMute);
 			if (!noSaveGame && (key == 'W' || key == 'w')) {
 				if (!option)
 					continue;
@@ -469,7 +470,7 @@ int returnChoice(string menu[], const int length, int x, int y) {
 int returnChoice2(bool mute, string menu[], const int length, int x, int y)
 {
 	int choice = 0;
-	clickSound(true);
+	//clickSound(true);
 	while (true) {
 		for (int i = 0; i < length; i++)
 		{
@@ -536,17 +537,36 @@ void GAME::printCongrat() {
 	" \\___\\___/|_| |_|\\__, |_|  \\__,_|\\__|\\__,_|_|\\__,_|\\__|_|\\___/|_| |_|",
 	"                  __/ |                                              ",
 	"                 |___/                                               " };
+	drawRecDouble(49, 9, 75, 8);
 	for (int i = 0; i < 8; i++) {
 		gotoXY(x, y++);
 		cout << title[i] << "\n";
 	}
-	x = 65;
+
+	x = 66, y = 30;
+	const string champion[7] = {
+	"                  \\o/",
+	"                   |",
+	"                __/_\\__",
+	"               |       |______",
+	"        _______|       |      |",
+	"       |  III  |   I   |  II  |",
+	"_______|_______|_______|______|________",
+	};
+	for (int i = 0; i < 7; ++i) {
+		gotoXY(x, y++);
+		cout << champion[i];
+	}
+
+	x = 67;
 	y = 20;
 	gotoXY(x, y);
+	TextColor(14);
 	cout << "GOOD GAME! YOU ARE THE BEST ROAD CROSSER!\n";
+	TextColor(15);
 	gotoXY(x + 12, y + 2);
 	cout << "BACK TO MENU?";
-	x = 80;
+	x = 82;
 	y = 24;
 	string prompt[] = { "1. Yes", "2. Also yes" };
 	const int length = 2;
@@ -603,6 +623,7 @@ bool GAME::printLose() {
 
 bool GAME::levelUp() {
 	system("cls");
+	winSound(isMute);
 	int x = 68, y = 10;
 	const string title[8] = {
 	" _                _               ",
@@ -950,11 +971,12 @@ void keyboardSound(bool mute)
 {
 	if (mute)
 		PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
-	else
+	else 
 	{
 		PlaySound(TEXT("keyboard.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	}
 }
+
 void winSound(bool mute)
 {
 	if (mute)
@@ -969,5 +991,6 @@ int main() {
 	GAME g;
 	resizeConsole(1300, 700);
 	Nocursortype();
+	//g.printCongrat();
 	g.menu();
 }
