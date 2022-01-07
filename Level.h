@@ -9,7 +9,7 @@ using namespace std;
 #define MIN_SPEED 2	
 #define MAX_DISTANCE 7
 #define MAX_LIGHTPHASE 50000
-#define MAX_EPOCH 1000
+#define MAX_EPOCH 5000
 
 class LEVEL {
 private:
@@ -18,6 +18,7 @@ private:
 	int distance;
 	int lightPhase;
 	int epoch;
+	int speedPerLevel[5] = { 2,3,2,3,4 };
 public:
 	LEVEL(int nLevel = 1, int speed = MIN_SPEED, int distance = MAX_DISTANCE, int lightPhase = MAX_LIGHTPHASE, int epoch = MAX_EPOCH);
 	void NewLevel();
@@ -25,6 +26,7 @@ public:
 	int getSpeed();
 	int getDistance();
 	int getLightPhase();
+	float getDense();
 	int getEpoch();
 	int getLevel();
 	bool passAllLevels();

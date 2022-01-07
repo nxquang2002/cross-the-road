@@ -12,7 +12,7 @@ void LEVEL::NewLevel() {
 	if (nLevel == 5)
 		return;
 	nLevel++;
-	speed++;
+	speed = speedPerLevel[nLevel - 1];
 	distance--;
 	lightPhase -= 5000;
 	epoch -= (epoch / 100) * 20;					//epoch = 80% * epoch
@@ -22,8 +22,8 @@ void LEVEL::moveToLevel(int lvl) {
 	if (lvl <= 0 || lvl > 5)
 		return;
 	nLevel = lvl;
-	speed = MIN_SPEED + (lvl-1);					//a little hardcode
-	distance = MAX_DISTANCE - (lvl-1);
+	speed = speedPerLevel[lvl - 1];					
+	distance = MAX_DISTANCE - (lvl-1);				//a little hardcode
 	lightPhase = MAX_LIGHTPHASE - (lvl - 1) * 5000;
 	epoch = MAX_EPOCH * pow(0.8, lvl - 1);
 }
@@ -38,6 +38,11 @@ int LEVEL::getLightPhase() {
 
 int LEVEL::getDistance() {
 	return distance;
+}
+
+float LEVEL::getDense() {
+	float dense = (float)epoch / 1000;
+	return (float)1/dense;
 }
 
 int LEVEL::getEpoch() {
@@ -62,8 +67,8 @@ void LEVEL::saveLevel(ofstream& ofs) {
 
 void LEVEL::loadLevel(ifstream& ifs) {
 	ifs.read((char*)&nLevel, sizeof(int));
-	speed = MIN_SPEED + (nLevel - 1);					//a little hardcode
-	distance = MAX_DISTANCE - (nLevel - 1);
+	speed = speedPerLevel[nLevel - 1];					
+	distance = MAX_DISTANCE - (nLevel - 1);				//a little hardcode
 	lightPhase = MAX_LIGHTPHASE - (nLevel - 1) * 5000;
 	epoch = MAX_EPOCH * pow(0.8, nLevel - 1);
-}
+} 
